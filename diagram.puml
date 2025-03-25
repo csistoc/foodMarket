@@ -1,0 +1,128 @@
+@startuml
+
+' Zero or One 	|o--
+' Exactly One 	||--
+' Zero or Many 	}o--
+' One or Many 	}|--
+
+' dot = mandatory field
+
+' avoid problems with angled crows feet
+skinparam linetype ortho
+
+class "Users" {
+    *user_id : Long <<generated>>
+    --
+    *username : String
+    *password : String
+    name : String
+    surname : String
+    *address : String
+    *phone : String
+    dateOfBirth : Date
+    --
+    *isUserSeller : Boolean
+    --
+    *isUserAdmin : Boolean
+}
+
+class "Sellers" {
+    *seller_id : Long <<generated>>
+    --
+    *name : String
+    *address : String
+    phone : String
+}
+
+class "Employees" {
+    *employee_id : Long <<generated>>
+    --
+    *user_id : Long <<FK>>
+    *seller_id : Long <<FK>>
+}
+
+class "ProductCategorys" {
+    *productCategoryName_id : Long <<generated>>
+    --
+    *name : String
+}
+
+class "Ingredients" {
+    *ingredient_id : Long <<generated>>
+    --
+    *name : String
+}
+
+class "Products" {
+    *product_id : Long <<generated>>
+    --
+    *name : String
+    *productCategory_id : Long <<FK>>
+}
+
+class "ProductIngredients" {
+    *productIngredient_id : Long <<generated>>
+    --
+    *product_id : Long <<FK>>
+    *ingredient_id : Long <<FK>>
+}
+
+class "SellerProducts" {
+    *sellerProduct_id : Long <<generated>>
+    --
+    *seller_id : Long <<FK>>
+    *product_id : Long <<FK>>
+}
+
+class "OrderStatuses" {
+    *orderStatus_id : Long <<generated>>
+    --
+    name : Long
+}
+
+class "Orders" {
+    *order_id : Long <<generated>>
+    --
+    *seller_id : Long <<FK>>
+    *user_id : Long <<FK>>
+    *orderStatus_id : Long <<FK>>
+}
+
+class "OrderProducts" {
+    *orderProducts_id : Long <<generated>>
+    --
+    *order_id : Long <<FK>>
+    *product_id : Long <<FK>>
+}
+
+Users  -- "1" Employees
+Employees "many" -- "1" Sellers
+
+SellerProducts "1" -- "1" Sellers
+SellerProducts "1" -- "many" Products
+
+ProductIngredients "many" -- "many" Ingredients
+ProductIngredients "many" -- "many" Products
+
+ProductCategorys "many" -- "many" Products
+
+OrderStatuses "1" -- "1" Orders
+OrderProducts "many" -- "1" Orders
+Orders "many" -- "1" Users
+Orders "many" -- "1" Sellers
+
+OrderProducts "many" -- "1" Products
+
+'e01 }|..|| e02
+'e01 }|..|| e03
+
+'e02 }|..|| e05
+
+'e02 }|..|| e04
+'e03 }|..|| e04
+
+'e02 }|..|| e06
+'e03 }|..|| e06
+
+
+@enduml
