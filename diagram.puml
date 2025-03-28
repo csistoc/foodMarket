@@ -11,23 +11,24 @@
 skinparam linetype ortho
 
 class "Users" {
-    *user_id : Long <<generated>>
+    *id : Long <<generated>>
     --
     *username : String
     *password : String
-    name : String
-    surname : String
+    *email : String
+    first_name : String
+    last_name : String
     *address : String
     *phone : String
-    dateOfBirth : Date
+    birth_date : Date
     --
-    *isUserSeller : Boolean
+    *is_user_seller : Boolean
     --
-    *isUserAdmin : Boolean
+    *is_user_admin : Boolean
 }
 
 class "Sellers" {
-    *seller_id : Long <<generated>>
+    *id : Long <<generated>>
     --
     *name : String
     *address : String
@@ -35,61 +36,61 @@ class "Sellers" {
 }
 
 class "Employees" {
-    *employee_id : Long <<generated>>
+    *id : Long <<generated>>
     --
     *user_id : Long <<FK>>
     *seller_id : Long <<FK>>
 }
 
-class "ProductCategorys" {
-    *productCategoryName_id : Long <<generated>>
+class "Product_Categorys" {
+    *id : Long <<generated>>
     --
     *name : String
 }
 
 class "Ingredients" {
-    *ingredient_id : Long <<generated>>
+    *id : Long <<generated>>
     --
     *name : String
 }
 
 class "Products" {
-    *product_id : Long <<generated>>
+    *id : Long <<generated>>
     --
     *name : String
-    *productCategory_id : Long <<FK>>
+    *product_category_id : Long <<FK>>
 }
 
-class "ProductIngredients" {
-    *productIngredient_id : Long <<generated>>
+class "Product_Ingredients" {
+    *id : Long <<generated>>
     --
     *product_id : Long <<FK>>
     *ingredient_id : Long <<FK>>
 }
 
-class "SellerProducts" {
-    *sellerProduct_id : Long <<generated>>
+class "Seller_Products" {
+    *id : Long <<generated>>
     --
     *seller_id : Long <<FK>>
     *product_id : Long <<FK>>
 }
 
-class "OrderStatuses" {
-    *orderStatus_id : Long <<generated>>
+class "Order_Statuses" {
+    *id : Long <<generated>>
     --
-    name : Long
+    *name : Long
 }
 
 class "Orders" {
-    *order_id : Long <<generated>>
+    *id : Long <<generated>>
     --
     *seller_id : Long <<FK>>
     *user_id : Long <<FK>>
-    *orderStatus_id : Long <<FK>>
+    *order_status_id : Long <<FK>>
 }
 
-class "OrderProducts" {
-    *orderProducts_id : Long <<generated>>
+class "Order_Products" {
+    *id : Long <<generated>>
     --
     *order_id : Long <<FK>>
     *product_id : Long <<FK>>
@@ -98,20 +99,20 @@ class "OrderProducts" {
 Users  -- "1" Employees
 Employees "many" -- "1" Sellers
 
-SellerProducts "1" -- "1" Sellers
-SellerProducts "1" -- "many" Products
+Seller_Products "1" -- "1" Sellers
+Seller_Products "1" -- "many" Products
 
-ProductIngredients "many" -- "many" Ingredients
-ProductIngredients "many" -- "many" Products
+Product_Ingredients "many" -- "many" Ingredients
+Product_Ingredients "many" -- "many" Products
 
-ProductCategorys "many" -- "many" Products
+Product_Categorys "many" -- "many" Products
 
-OrderStatuses "1" -- "1" Orders
-OrderProducts "many" -- "1" Orders
+Order_Statuses "1" -- "1" Orders
+Order_Products "many" -- "1" Orders
 Orders "many" -- "1" Users
 Orders "many" -- "1" Sellers
 
-OrderProducts "many" -- "1" Products
+Order_Products "many" -- "1" Products
 
 'e01 }|..|| e02
 'e01 }|..|| e03
