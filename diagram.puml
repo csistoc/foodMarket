@@ -8,7 +8,7 @@
 ' dot = mandatory field
 
 ' avoid problems with angled crows feet
-skinparam linetype ortho
+'skinparam linetype ortho
 
 class "Users" {
     *id : Long <<generated>>
@@ -42,10 +42,17 @@ class "Employees" {
     *seller_id : Long <<FK>>
 }
 
-class "Product_Categorys" {
+class "Categories" {
     *id : Long <<generated>>
     --
     *name : String
+}
+
+class "Product_Categories" {
+    *id : Long <<generated>>
+    --
+    *category_id : Long <<FK>>
+    *product_id : Long <<FK>>
 }
 
 class "Ingredients" {
@@ -96,23 +103,32 @@ class "Order_Products" {
     *product_id : Long <<FK>>
 }
 
-Users  -- "1" Employees
-Employees "many" -- "1" Sellers
+Users "1" -- Employees
 
-Seller_Products "1" -- "1" Sellers
-Seller_Products "1" -- "many" Products
+Sellers "1" -- "many" Employees
 
-Product_Ingredients "many" -- "many" Ingredients
-Product_Ingredients "many" -- "many" Products
+Products "many" -- "many" Sellers
+Seller_Products -- Sellers
+Seller_Products -- Products
 
-Product_Categorys "many" -- "many" Products
+Products "many" -- "many" Ingredients
+Product_Ingredients -- Ingredients
+Product_Ingredients -- Products
 
-Order_Statuses "1" -- "1" Orders
-Order_Products "many" -- "1" Orders
+Categories "many" -- "many" Products
+Categories -- Product_Categories
+Products -- Product_Categories
+
 Orders "many" -- "1" Users
+
+Order_Statuses "1" -- "many" Orders
+
+Products "many" -- "many" Orders
+Order_Products -- Products
+Order_Products -- Orders
+
 Orders "many" -- "1" Sellers
 
-Order_Products "many" -- "1" Products
 
 'e01 }|..|| e02
 'e01 }|..|| e03
