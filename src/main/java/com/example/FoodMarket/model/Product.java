@@ -34,13 +34,17 @@ public class Product {
     @ManyToMany(mappedBy = "PRODUCTS")
     private Set<Seller> sellerProducts;
 
+    @ManyToMany(mappedBy = "PRODUCTS")
+    private Set<Order> orderProducts;
+
     public Product() { }
 
-    public Product(String name, Set<Category> productCategories, Set<Ingredient> productIngredients, Set<Seller> sellerProducts) {
+    public Product(String name, Set<Category> productCategories, Set<Ingredient> productIngredients, Set<Seller> sellerProducts, Set<Order> orderProducts) {
         this.name = name;
         this.productCategories = productCategories;
         this.productIngredients = productIngredients;
         this.sellerProducts = sellerProducts;
+        this.orderProducts = orderProducts;
     }
 
     public Long getId() {
@@ -81,5 +85,13 @@ public class Product {
 
     public void setSellerProducts(Set<Seller> sellerProducts) {
         this.sellerProducts = sellerProducts;
+    }
+
+    public Set<Order> getOrderProducts() {
+        return orderProducts;
+    }
+
+    public void setOrderProducts(Set<Order> orderProducts) {
+        this.orderProducts = orderProducts;
     }
 }

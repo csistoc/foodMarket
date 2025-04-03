@@ -19,7 +19,7 @@ public class Seller {
 
     private String phone;
 
-    @OneToMany(mappedBy="SELLERS")
+    @OneToMany(mappedBy = "SELLERS")
     private Set<Employee> employees;
 
     @ManyToMany(cascade = { CascadeType.ALL })

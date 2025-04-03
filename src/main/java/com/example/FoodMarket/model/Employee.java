@@ -16,7 +16,7 @@ public class Employee {
     private User user;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="SELLER_ID", referencedColumnName = "ID", nullable=false)
+    @JoinColumn(name = "SELLER_ID", referencedColumnName = "ID", nullable = false)
     private Seller seller;
 
     public Employee() { }
