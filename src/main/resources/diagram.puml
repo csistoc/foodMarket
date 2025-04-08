@@ -65,7 +65,6 @@ class "Products" {
     *id : Long <<generated>>
     --
     *name : String
-    *product_category_id : Long <<FK>>
 }
 
 class "Product_Ingredients" {

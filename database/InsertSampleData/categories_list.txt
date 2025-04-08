@@ -1,0 +1,47 @@
+Fruits
+Vegetables
+Grains
+Legumes
+Nuts
+Seeds
+Dairy
+Meat
+Poultry
+Seafood
+Eggs
+Oils
+Spices
+Herbs
+Condiments
+Baked Goods
+Beverages
+Soups
+Stews
+Salads
+Snacks
+Desserts
+Cereals
+Pasta
+Rice Dishes
+Sandwiches
+Sauces
+Fermented Foods
+Frozen Foods
+Canned Foods
+Pickled Foods
+Fried Foods
+Grilled Foods
+Boiled Foods
+Roasted Foods
+Raw Foods
+Breakfast Foods
+Lunch Foods
+Dinner Foods
+Fast Food
+Street Food
+Gourmet Food
+Comfort Food
+Health Foods
+Convenience Foods
+Plant-based Foods
+Processed Foods

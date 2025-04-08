@@ -1,0 +1,75 @@
+Salt
+Sugar
+Black Pepper
+Olive Oil
+Butter
+Garlic
+Onions
+Tomatoes
+Milk
+Eggs
+Flour
+Baking Powder
+Baking Soda
+Yeast
+Vinegar
+Soy Sauce
+Honey
+Lemon Juice
+Mustard
+Ketchup
+Mayonnaise
+Chicken (raw)
+Beef (raw)
+Pork (raw)
+Fish (raw)
+Tofu
+Rice
+Pasta
+Potatoes
+Carrots
+Bell Peppers
+Spinach
+Broccoli
+Cabbage
+Zucchini
+Cucumber
+Lettuce
+Corn
+Green Beans
+Peas
+Mushrooms
+Chili Powder
+Cumin
+Paprika
+Curry Powder
+Oregano
+Basil
+Cinnamon
+Nutmeg
+Vanilla Extract
+Coconut Milk
+Cheese
+Yogurt
+Cream
+Beans (kidney, black, etc.)
+Lentils
+Chickpeas
+Oats
+Peanut Butter
+Nuts (almonds, cashews, etc.)
+Seeds (chia, flax, sunflower)
+Apples
+Bananas
+Oranges
+Strawberries
+Grapes
+Limes
+Pineapple
+Mango
+Coconut
+Bread
+Crackers
+Tomato Paste
+Canned Tomatoes
+Stock/Broth (chicken, beef, veggie)
