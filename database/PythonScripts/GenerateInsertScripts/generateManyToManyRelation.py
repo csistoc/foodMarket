@@ -1,7 +1,7 @@
 import random
 import sys
 
-from database.CreateQueryScripts.auxScripts import get_string_list_by_words, generate_strong_random_string, \
+from database.PythonScripts.auxScripts import get_string_list_by_words, generate_strong_random_string, \
     generate_random_date
 
 # first and second argument are the table names
