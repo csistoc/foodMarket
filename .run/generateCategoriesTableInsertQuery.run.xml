@@ -1,0 +1,25 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="generateCategoriesTableInsertQuery" type="PythonConfigurationType" factoryName="Python">
+    <module name="FoodMarket" />
+    <option name="ENV_FILES" value="" />
+    <option name="INTERPRETER_OPTIONS" value="" />
+    <option name="PARENT_ENVS" value="true" />
+    <envs>
+      <env name="PYTHONUNBUFFERED" value="1" />
+    </envs>
+    <option name="SDK_HOME" value="" />
+    <option name="SDK_NAME" value="jbr-17" />
+    <option name="WORKING_DIRECTORY" value="C:\Users\stefa\IdeaProjects\FoodMarket\database\PythonScripts\GenerateInsertScripts" />
+    <option name="IS_MODULE_SDK" value="true" />
+    <option name="ADD_CONTENT_ROOTS" value="true" />
+    <option name="ADD_SOURCE_ROOTS" value="true" />
+    <option name="SCRIPT_NAME" value="$PROJECT_DIR$/database/PythonScripts/GenerateInsertScripts/generateTableInsertQueryWithOneParameter.py" />
+    <option name="PARAMETERS" value="&quot;C:\Users\stefa\IdeaProjects\FoodMarket\database\InsertSampleData\categories_list.txt&quot; &quot;C:\Users\stefa\IdeaProjects\FoodMarket\database\Queries\insertCategoriesIntoTable.sql&quot; &quot;CATEGORIES&quot;" />
+    <option name="SHOW_COMMAND_LINE" value="false" />
+    <option name="EMULATE_TERMINAL" value="false" />
+    <option name="MODULE_MODE" value="false" />
+    <option name="REDIRECT_INPUT" value="false" />
+    <option name="INPUT_FILE" value="" />
+    <method v="2" />
+  </configuration>
+</component>
