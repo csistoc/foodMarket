@@ -7,11 +7,13 @@ from database.PythonScripts.auxScripts import get_string_list_by_words
 # third argument is the name of the insert table
 
 ingredient_list = get_string_list_by_words(sys.argv[1])
-filedata_write = ""
+insert = ""
 
 with open(sys.argv[1], "r") as fr:
     for line in fr:
-        filedata_write += "INSERT INTO " + sys.argv[3] + " VALUES (DEFAULT, '" + line.strip('\n') + "');\n"
+        insert += (
+                f"INSERT INTO " + sys.argv[3] + " VALUES (DEFAULT, '" + line.strip('\n') + "');\n"
+        )
 
 with open(sys.argv[2], "w") as fw:
-    fw.write(filedata_write)
+    fw.write(insert)

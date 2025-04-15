@@ -19,6 +19,15 @@ def get_string_list_by_words(file_path):
     words = text.split()  # Splits on whitespace by default
     return words
 
+def get_file_lines_as_list(file_path):
+    with open(file_path, 'r', encoding='utf-8') as file:
+        lines = [line.strip() for line in file]  # .strip() removes newline characters
+    return lines
+
+def strip_special_characters(text):
+    # Keeps only letters, numbers, and spaces
+    return re.sub(r'[^A-Za-z0-9 ]+', '', text)
+
 def generate_strong_random_string(length = 12):
     chars = string.ascii_letters + string.digits # + string.punctuation
     return ''.join(random.choice(chars) for _ in range(length))

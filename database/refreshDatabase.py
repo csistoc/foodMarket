@@ -7,7 +7,7 @@ import glob
 # second argument is database password
 # third argument is sql files location
 
-# === Configuration ===
+# configuration
 sql_folder_path = sys.argv[3]  # Folder with .sql files
 h2_jar_path = r"C:\Program Files (x86)\H2\bin\h2-2.3.232.jar"
 jdbc_url = "jdbc:h2:~/testdb"  # File-based DB in home folder
@@ -15,7 +15,7 @@ jdbc_driver = "org.h2.Driver"
 username = sys.argv[1]
 password = sys.argv[2]
 
-# === Connect to H2 ===
+# connect to H2
 conn = jaydebeapi.connect(
     jdbc_driver,
     jdbc_url,
@@ -24,10 +24,10 @@ conn = jaydebeapi.connect(
 )
 cursor = conn.cursor()
 
-# === Get all .sql files (sorted by filename) ===
+# get all .sql files (sorted by filename)
 sql_files = sorted(glob.glob(os.path.join(sql_folder_path, "*.sql")))
 
-# === Run each SQL file ===
+# run each SQL file
 for sql_file in sql_files:
     print(f"\nRunning: {sql_file}")
     with open(sql_file, "r") as f:

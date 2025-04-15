@@ -13,8 +13,8 @@
     <option name="IS_MODULE_SDK" value="true" />
     <option name="ADD_CONTENT_ROOTS" value="true" />
     <option name="ADD_SOURCE_ROOTS" value="true" />
-    <option name="SCRIPT_NAME" value="$PROJECT_DIR$/database/PythonScripts/GenerateInsertScripts/generateTableInsertQueryWithOneParameter.py" />
-    <option name="PARAMETERS" value="&quot;C:\Users\stefa\IdeaProjects\FoodMarket\database\InsertSampleData\sellers_list.txt&quot; &quot;C:\Users\stefa\IdeaProjects\FoodMarket\database\Queries\insertSellersIntoTable.sql&quot; &quot;SELLERS&quot;" />
+    <option name="SCRIPT_NAME" value="$PROJECT_DIR$/database/PythonScripts/GenerateInsertScripts/generateSellerTableInsertQuery.py" />
+    <option name="PARAMETERS" value="&quot;C:\Users\stefa\IdeaProjects\FoodMarket\database\InsertSampleData\sellers_list.txt&quot; &quot;C:\Users\stefa\IdeaProjects\FoodMarket\database\InsertSampleData\countries_list.txt&quot; &quot;C:\Users\stefa\IdeaProjects\FoodMarket\database\Queries\insertSellersIntoTable.sql&quot; &quot;SELLERS&quot; &quot;50&quot;" />
     <option name="SHOW_COMMAND_LINE" value="false" />
     <option name="EMULATE_TERMINAL" value="false" />
     <option name="MODULE_MODE" value="false" />
