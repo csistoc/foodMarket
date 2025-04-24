@@ -3,6 +3,9 @@ from datetime import datetime, timedelta
 import random
 import string
 
+import jaydebeapi
+
+
 def strip_non_alphanumerical_from_file(file_in, file_out):
     filedata = ""
     with open(file_in, "r") as f:
@@ -71,3 +74,47 @@ def escape_sql(value):
     value = value.replace("!", "\\\\!") # Escape exclamation marks (!)
     value = value.replace("@", "\\\\@") # Escape the @ symbol
     return str(value)
+
+# temp hardcoded database username
+def getDatabaseUsername():
+    username = "admin"
+    return username
+
+# temp hardcoded database password
+def getDatabasePassword():
+    password = "admin"
+    return password
+
+# return the number of rows of a table
+def getTableRowCount(username, password, table_name):
+    # first argument is database username
+    # second argument is database password
+    # third argument is the table name
+
+    # configuration
+    h2_jar_path = r"C:\Program Files (x86)\H2\bin\h2-2.3.232.jar"
+    jdbc_url = "jdbc:h2:~/testdb"  # File-based DB in home folder
+
+    # JDBC driver class
+    jdbc_driver = "org.h2.Driver"
+
+    # Connect to the H2 database
+    conn = jaydebeapi.connect(jdbc_driver,
+                          jdbc_url,
+                          [username, password],
+                          h2_jar_path)
+
+    # Create a cursor
+    cursor = conn.cursor()
+
+    # Execute a COUNT query
+    cursor.execute(f"SELECT COUNT(*) FROM {table_name}")
+    row_count = cursor.fetchone()[0]
+
+    print(f"Total rows in '{table_name}': {row_count}")
+
+    # Clean up
+    cursor.close()
+    conn.close()
+
+    return row_count

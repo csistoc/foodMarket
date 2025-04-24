@@ -1,14 +1,13 @@
 import random
 import sys
 
-from database.PythonScripts.auxScripts import get_string_list_by_words, generate_strong_random_string, \
-    generate_random_date
-
-# first and second argument are the table names
+# first argument is the first table name
+# second argument is the second table name
 # third argument is the write file
 # fourth argument is the name of the insert table
 # fifth argument is the number of queries generated per relation
-# sixth argument is the number of overall generated queries
+# sixth argument is the total number of generated queries
+
 
 import random
 

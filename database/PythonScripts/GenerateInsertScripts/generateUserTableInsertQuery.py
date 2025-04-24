@@ -18,7 +18,7 @@ for i in range(int(sys.argv[5])):
     rnd_name = random.sample(name_list, 2)  # Pick 2 unique names
     username = escape_sql(rnd_name[0] + rnd_name[1])
     password = escape_sql(generate_strong_random_string(12))
-    email = escape_sql(rnd_name[0] + "." + rnd_name[1] + "@email.com")
+    email = escape_sql(rnd_name[0] + "." + rnd_name[1]) + "@email.com"
     first_name = escape_sql(rnd_name[0])
     last_name = escape_sql(rnd_name[1])
     address = escape_sql(random.choice(country_list))

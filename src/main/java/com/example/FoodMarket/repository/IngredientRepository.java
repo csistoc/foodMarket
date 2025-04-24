@@ -1,0 +1,8 @@
+package com.example.FoodMarket.repository;
+
+import com.example.FoodMarket.model.Ingredient;
+import org.springframework.data.repository.CrudRepository;
+
+public interface IngredientRepository extends CrudRepository<Ingredient, Long> {
+
+}
