@@ -11,13 +11,11 @@ import sys
 
 import random
 
-def generate_many_to_many_inserts(join_table, left_table_col, right_table_col, left_ids, right_ids, num_links):
+def generate_many_to_many_inserts(join_table, left_ids, right_ids, num_links):
     """
     Generate SQL INSERT statements for a many-to-many relationship.
 
     :param join_table: Name of the join table
-    :param left_table_col: Column name for the left table's ID
-    :param right_table_col: Column name for the right table's ID
     :param left_ids: List of left-side IDs (e.g., student IDs)
     :param right_ids: List of right-side IDs (e.g., course IDs)
     :param num_links: Number of link entries to generate
@@ -28,7 +26,7 @@ def generate_many_to_many_inserts(join_table, left_table_col, right_table_col, l
         left_id = random.choice(left_ids)
         right_id = random.choice(right_ids)
         inserts.append(
-            f"INSERT INTO {join_table} ({left_table_col}, {right_table_col}) VALUES ({left_id}, {right_id});"
+            f"INSERT INTO {join_table} VALUES ({left_id}, {right_id});"
         )
     return "\n".join(inserts)
 
@@ -38,8 +36,6 @@ courses = list(range(101, 106))  # course_id from 101 to 105
 
 sql_output = generate_many_to_many_inserts(
     join_table="student_courses",
-    left_table_col="student_id",
-    right_table_col="course_id",
     left_ids=students,
     right_ids=courses,
     num_links=20  # generate 20 random student-course assignments
