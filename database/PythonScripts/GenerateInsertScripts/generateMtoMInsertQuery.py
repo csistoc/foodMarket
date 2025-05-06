@@ -1,48 +1,26 @@
-import random
 import sys
 
-# first argument is the first table name
-# second argument is the second table name
-# third argument is the write file
-# fourth argument is the name of the insert table
-# fifth argument is the number of queries generated per relation
-# sixth argument is the total number of generated queries
+from database.PythonScripts.sqlAuxScripts import generate_many_to_many_inserts, get_table_row_count
 
+"""
+    sys.argv[1] = Database username
+    sys.argv[2] = Database password
+    sys.argv[3] = First table name
+    sys.argv[4] = Second table name
+    sys.argv[5] = Join table name
+    sys.argv[6] = Number of generated inserts
+    sys.argv[7] = Name of the file in which we write the list of sql commands
+"""
 
-import random
+first_table_count = get_table_row_count(sys.argv[1], sys.argv[2], sys.argv[3])
+second_table_count = get_table_row_count(sys.argv[1], sys.argv[2], sys.argv[4])
 
-def generate_many_to_many_inserts(join_table, left_ids, right_ids, num_links):
-    """
-    Generate SQL INSERT statements for a many-to-many relationship.
+first_table_ids = list(range(1, first_table_count))
+second_table_ids = list(range(1, second_table_count))
 
-    :param join_table: Name of the join table
-    :param left_ids: List of left-side IDs (e.g., student IDs)
-    :param right_ids: List of right-side IDs (e.g., course IDs)
-    :param num_links: Number of link entries to generate
-    :return: String of SQL INSERT statements
-    """
-    inserts = []
-    for _ in range(num_links):
-        left_id = random.choice(left_ids)
-        right_id = random.choice(right_ids)
-        inserts.append(
-            f"INSERT INTO {join_table} VALUES ({left_id}, {right_id});"
-        )
-    return "\n".join(inserts)
+sql_output = generate_many_to_many_inserts(sys.argv[5], first_table_ids, second_table_ids, sys.argv[6])
 
-# Example usage
-students = list(range(1, 11))    # student_id from 1 to 10
-courses = list(range(101, 106))  # course_id from 101 to 105
-
-sql_output = generate_many_to_many_inserts(
-    join_table="student_courses",
-    left_ids=students,
-    right_ids=courses,
-    num_links=20  # generate 20 random student-course assignments
-)
-
-# Save to file or print
-with open("insert_student_courses.sql", "w") as file:
+with open(sys.argv[7], "w") as file:
     file.write(sql_output)
 
 print("Generated SQL insert queries:\n")
