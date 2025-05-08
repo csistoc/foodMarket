@@ -84,3 +84,7 @@ def escape_sql(value):
     value = value.replace("@", "\\@")  # Escape the @ symbol
 
     return str(value)
+
+def write_string_to_file(value, file_location):
+    with (open(file_location, "w") as fw):
+        fw.write(value)
