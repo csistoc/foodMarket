@@ -5,8 +5,7 @@ import jakarta.persistence.*;
 import java.util.Set;
 
 @Entity
-@Table(name = "ORDERS")
-@PrimaryKeyJoinColumn(name = "ID")
+@Table(name = "orders")
 public class Order {
 
     @Id
@@ -14,32 +13,32 @@ public class Order {
     private Long id;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "SELLER_ID", referencedColumnName = "ID", nullable = false)
+    @JoinColumn(name = "seller_id", referencedColumnName = "id", nullable = false)
     private Seller seller;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "USER_ID", referencedColumnName = "ID", nullable = false)
+    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     private User user;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "ORDER_STATUS_ID", referencedColumnName = "ID", nullable = false)
+    @JoinColumn(name = "order_status_id", referencedColumnName = "id", nullable = false)
     private OrderStatus orderStatus;
 
     @ManyToMany(cascade = { CascadeType.ALL })
     @JoinTable(
-            name = "ORDER_PRODUCTS",
-            joinColumns = { @JoinColumn(name = "PRODUCT_ID") },
-            inverseJoinColumns = { @JoinColumn(name = "ORDER_ID") }
+            name = "order_products",
+            joinColumns = { @JoinColumn(name = "order_id") },
+            inverseJoinColumns = { @JoinColumn(name = "product_id") }
     )
-    private Set<Product> orderProducts;
+    private Set<Product> products;
 
     public Order() { }
 
-    public Order(Seller seller, User user, OrderStatus orderStatus, Set<Product> orderProducts) {
+    public Order(Seller seller, User user, OrderStatus orderStatus, Set<Product> products) {
         this.seller = seller;
         this.user = user;
         this.orderStatus = orderStatus;
-        this.orderProducts = orderProducts;
+        this.products = products;
     }
 
     public Long getId() {
@@ -74,11 +73,11 @@ public class Order {
         this.orderStatus = orderStatus;
     }
 
-    public Set<Product> getOrderProducts() {
-        return orderProducts;
+    public Set<Product> getProducts() {
+        return products;
     }
 
-    public void setOrderProducts(Set<Product> orderProducts) {
-        this.orderProducts = orderProducts;
+    public void setProducts(Set<Product> products) {
+        this.products = products;
     }
 }

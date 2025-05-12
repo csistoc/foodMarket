@@ -5,8 +5,7 @@ import jakarta.persistence.*;
 import java.util.Set;
 
 @Entity
-@Table(name = "CATEGORIES")
-@PrimaryKeyJoinColumn(name = "ID")
+@Table(name = "categories")
 public class Category {
 
     @Id
@@ -15,8 +14,8 @@ public class Category {
 
     private String name;
 
-    @ManyToMany(mappedBy = "CATEGORIES")
-    Set<Product> products;
+    @ManyToMany(mappedBy = "categories")
+    private Set<Product> products;
 
     public Category() { }
 

@@ -3,8 +3,7 @@ package com.example.FoodMarket.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "EMPLOYEES")
-@PrimaryKeyJoinColumn(name = "ID")
+@Table(name = "employees")
 public class Employee {
 
     @Id
@@ -12,11 +11,11 @@ public class Employee {
     private Long id;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "USER_ID", referencedColumnName = "ID", nullable = false)
+    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     private User user;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "SELLER_ID", referencedColumnName = "ID", nullable = false)
+    @JoinColumn(name = "seller_id", referencedColumnName = "id", nullable = false)
     private Seller seller;
 
     public Employee() { }

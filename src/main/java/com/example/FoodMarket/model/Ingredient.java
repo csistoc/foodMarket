@@ -5,8 +5,7 @@ import jakarta.persistence.*;
 import java.util.Set;
 
 @Entity
-@Table(name = "INGREDIENTS")
-@PrimaryKeyJoinColumn(name = "ID")
+@Table(name = "ingredients")
 public class Ingredient {
 
     @Id
@@ -15,14 +14,14 @@ public class Ingredient {
 
     private String name;
 
-    @ManyToMany(mappedBy = "INGREDIENTS")
-    private Set<Product> productIngredients;
+    @ManyToMany(mappedBy = "ingredients")
+    private Set<Product> products;
 
     public Ingredient() { }
 
-    public Ingredient(String name, Set<Product> productIngredients) {
+    public Ingredient(String name, Set<Product> products) {
         this.name = name;
-        this.productIngredients = productIngredients;
+        this.products = products;
     }
 
     public Long getId() {
@@ -41,11 +40,11 @@ public class Ingredient {
         this.name = name;
     }
 
-    public Set<Product> getProductIngredients() {
-        return productIngredients;
+    public Set<Product> getProducts() {
+        return products;
     }
 
-    public void setProductIngredients(Set<Product> productIngredients) {
-        this.productIngredients = productIngredients;
+    public void setProducts(Set<Product> products) {
+        this.products = products;
     }
 }

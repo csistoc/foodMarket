@@ -5,8 +5,7 @@ import jakarta.persistence.*;
 import java.util.Set;
 
 @Entity
-@Table(name = "ORDER_STATUSES")
-@PrimaryKeyJoinColumn(name = "ID")
+@Table(name = "order_statuses")
 public class OrderStatus {
 
     @Id
@@ -15,7 +14,7 @@ public class OrderStatus {
 
     private String name;
 
-    @OneToMany(mappedBy = "ORDER_STATUSES")
+    @OneToMany(mappedBy = "orderStatus")
     private Set<Order> orders;
 
     public OrderStatus() { }

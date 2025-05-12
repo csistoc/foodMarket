@@ -5,8 +5,7 @@ import jakarta.persistence.*;
 import java.util.Set;
 
 @Entity
-@Table(name = "PRODUCTS")
-@PrimaryKeyJoinColumn(name = "ID")
+@Table(name = "products")
 public class Product {
 
     @Id
@@ -17,34 +16,34 @@ public class Product {
 
     @ManyToMany(cascade = { CascadeType.ALL })
     @JoinTable(
-            name = "PRODUCT_CATEGORIES",
-            joinColumns = { @JoinColumn(name = "PRODUCT_ID") },
-            inverseJoinColumns = { @JoinColumn(name = "CATEGORY_ID") }
+            name = "product_categories",
+            joinColumns = { @JoinColumn(name = "product_id") },
+            inverseJoinColumns = { @JoinColumn(name = "category_id") }
     )
-    private Set<Category> productCategories;
+    private Set<Category> categories;
 
     @ManyToMany(cascade = { CascadeType.ALL })
     @JoinTable(
-            name = "PRODUCT_INGREDIENTS",
-            joinColumns = { @JoinColumn(name = "PRODUCT_ID") },
-            inverseJoinColumns = { @JoinColumn(name = "INGREDIENT_ID") }
+            name = "product_ingredients",
+            joinColumns = { @JoinColumn(name = "product_id") },
+            inverseJoinColumns = { @JoinColumn(name = "ingredient_id") }
     )
-    private Set<Ingredient> productIngredients;
+    private Set<Ingredient> ingredients;
 
-    @ManyToMany(mappedBy = "PRODUCTS")
-    private Set<Seller> sellerProducts;
+    @ManyToMany(mappedBy = "products")
+    private Set<Seller> sellers;
 
-    @ManyToMany(mappedBy = "PRODUCTS")
-    private Set<Order> orderProducts;
+    @ManyToMany(mappedBy = "products")
+    private Set<Order> orders;
 
     public Product() { }
 
-    public Product(String name, Set<Category> productCategories, Set<Ingredient> productIngredients, Set<Seller> sellerProducts, Set<Order> orderProducts) {
+    public Product(String name, Set<Category> categories, Set<Ingredient> ingredients, Set<Seller> sellers, Set<Order> orders) {
         this.name = name;
-        this.productCategories = productCategories;
-        this.productIngredients = productIngredients;
-        this.sellerProducts = sellerProducts;
-        this.orderProducts = orderProducts;
+        this.categories = categories;
+        this.ingredients = ingredients;
+        this.sellers = sellers;
+        this.orders = orders;
     }
 
     public Long getId() {
@@ -63,35 +62,35 @@ public class Product {
         this.name = name;
     }
 
-    public Set<Category> getProductCategories() {
-        return productCategories;
+    public Set<Category> getCategories() {
+        return categories;
     }
 
-    public void setProductCategories(Set<Category> productCategories) {
-        this.productCategories = productCategories;
+    public void setCategories(Set<Category> categories) {
+        this.categories = categories;
     }
 
-    public Set<Ingredient> getProductIngredients() {
-        return productIngredients;
+    public Set<Ingredient> getIngredients() {
+        return ingredients;
     }
 
-    public void setProductIngredients(Set<Ingredient> productIngredients) {
-        this.productIngredients = productIngredients;
+    public void setIngredients(Set<Ingredient> ingredients) {
+        this.ingredients = ingredients;
     }
 
-    public Set<Seller> getSellerProducts() {
-        return sellerProducts;
+    public Set<Seller> getSellers() {
+        return sellers;
     }
 
-    public void setSellerProducts(Set<Seller> sellerProducts) {
-        this.sellerProducts = sellerProducts;
+    public void setSellers(Set<Seller> sellers) {
+        this.sellers = sellers;
     }
 
-    public Set<Order> getOrderProducts() {
-        return orderProducts;
+    public Set<Order> getOrders() {
+        return orders;
     }
 
-    public void setOrderProducts(Set<Order> orderProducts) {
-        this.orderProducts = orderProducts;
+    public void setOrders(Set<Order> orders) {
+        this.orders = orders;
     }
 }

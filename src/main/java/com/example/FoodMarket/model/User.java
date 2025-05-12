@@ -5,8 +5,7 @@ import jakarta.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "USERS")
-@PrimaryKeyJoinColumn(name = "id")
+@Table(name = "users")
 public class User {
 
     @Id

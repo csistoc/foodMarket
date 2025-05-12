@@ -5,8 +5,7 @@ import jakarta.persistence.*;
 import java.util.Set;
 
 @Entity
-@Table(name = "SELLERS")
-@PrimaryKeyJoinColumn(name = "id")
+@Table(name = "sellers")
 public class Seller {
 
     @Id
@@ -19,25 +18,25 @@ public class Seller {
 
     private String phone;
 
-    @OneToMany(mappedBy = "SELLERS")
+    @OneToMany(mappedBy = "seller")
     private Set<Employee> employees;
 
     @ManyToMany(cascade = { CascadeType.ALL })
     @JoinTable(
-            name = "SELLER_PRODUCTS",
-            joinColumns = { @JoinColumn(name = "SELLER_ID") },
-            inverseJoinColumns = { @JoinColumn(name = "PRODUCT_ID") }
+            name = "seller_products",
+            joinColumns = { @JoinColumn(name = "seller_id") },
+            inverseJoinColumns = { @JoinColumn(name = "product_id") }
     )
-    private Set<Product> sellerProducts;
+    private Set<Product> products;
 
     public Seller() { }
 
-    public Seller(String name, String address, String phone, Set<Employee> employees, Set<Product> sellerProducts) {
+    public Seller(String name, String address, String phone, Set<Employee> employees, Set<Product> products) {
         this.name = name;
         this.address = address;
         this.phone = phone;
         this.employees = employees;
-        this.sellerProducts = sellerProducts;
+        this.products = products;
     }
 
     public Long getId() {
@@ -80,11 +79,11 @@ public class Seller {
         this.employees = employees;
     }
 
-    public Set<Product> getSellerProducts() {
-        return sellerProducts;
+    public Set<Product> getProducts() {
+        return products;
     }
 
-    public void setSellerProducts(Set<Product> sellerProducts) {
-        this.sellerProducts = sellerProducts;
+    public void setProducts(Set<Product> products) {
+        this.products = products;
     }
 }
