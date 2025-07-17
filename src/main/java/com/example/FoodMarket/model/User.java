@@ -2,7 +2,7 @@ package com.example.FoodMarket.model;
 
 import jakarta.persistence.*;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "users")
@@ -24,7 +24,10 @@ public class User {
 
     private String address;
 
-    private Date dateOfBirth;
+    private String phone;
+
+    @Column(name = "birth_date")
+    private LocalDate dateOfBirth;
 
     private Boolean isUserSeller;
 
@@ -32,14 +35,14 @@ public class User {
 
     public User() { }
 
-    public User(String username, String password, String email, String firstName, String lastName, String address,
-                Date dateOfBirth, Boolean isUserSeller, Boolean isUserAdmin) {
+    public User(String username, String password, String email, String firstName, String lastName, String address, String phone, LocalDate dateOfBirth, Boolean isUserSeller, Boolean isUserAdmin) {
         this.username = username;
         this.password = password;
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
         this.address = address;
+        this.phone = phone;
         this.dateOfBirth = dateOfBirth;
         this.isUserSeller = isUserSeller;
         this.isUserAdmin = isUserAdmin;
@@ -101,11 +104,19 @@ public class User {
         this.address = address;
     }
 
-    public Date getDateOfBirth() {
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public LocalDate getDateOfBirth() {
         return dateOfBirth;
     }
 
-    public void setDateOfBirth(Date dateOfBirth) {
+    public void setDateOfBirth(LocalDate dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
 
