@@ -3,6 +3,7 @@ package com.example.FoodMarket.model;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -33,6 +34,12 @@ public class User {
 
     private Boolean isUserAdmin;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Order> orders;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Employee employee;
+
     public User() { }
 
     public User(String username, String password, String email, String firstName, String lastName, String address, String phone, LocalDate dateOfBirth, Boolean isUserSeller, Boolean isUserAdmin) {
@@ -46,6 +53,23 @@ public class User {
         this.dateOfBirth = dateOfBirth;
         this.isUserSeller = isUserSeller;
         this.isUserAdmin = isUserAdmin;
+    }
+
+    public User(Long id, String username, String password, String email, String firstName, String lastName, String address, String phone, LocalDate dateOfBirth,
+                Boolean isUserSeller, Boolean isUserAdmin, Set<Order> orders, Employee employee) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.address = address;
+        this.phone = phone;
+        this.dateOfBirth = dateOfBirth;
+        this.isUserSeller = isUserSeller;
+        this.isUserAdmin = isUserAdmin;
+        this.orders = orders;
+        this.employee = employee;
     }
 
     public Long getId() {
@@ -134,5 +158,21 @@ public class User {
 
     public void setUserAdmin(Boolean userAdmin) {
         isUserAdmin = userAdmin;
+    }
+
+    public Set<Order> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(Set<Order> orders) {
+        this.orders = orders;
+    }
+
+    public Employee getEmployee() {
+        return employee;
+    }
+
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
     }
 }

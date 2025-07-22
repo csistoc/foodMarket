@@ -14,7 +14,7 @@ public class OrderStatus {
 
     private String name;
 
-    @OneToMany(mappedBy = "orderStatus")
+    @OneToMany(mappedBy = "orderStatus", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Order> orders;
 
     public OrderStatus() { }

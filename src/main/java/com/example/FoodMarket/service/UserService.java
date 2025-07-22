@@ -18,6 +18,7 @@ public class UserService {
 
     public UserDefaultDto convertToDefaultDto(User user) {
         return new UserDefaultDto(
+                user.getId(),
                 user.getUsername(),
                 user.getPassword(),
                 user.getEmail(),
@@ -65,7 +66,7 @@ public class UserService {
     }
 
     public User changeUserPassword(UserPasswordDto userPasswordDto) {
-        // 1. Fetch existing user
+        // Fetch existing user
         Optional<User> optionalUser = userRepository.findById(userPasswordDto.getId());
         if (optionalUser.isEmpty()) {
             throw new RuntimeException("User not found with ID: " + userPasswordDto.getId());
@@ -73,15 +74,15 @@ public class UserService {
 
         User user = optionalUser.get();
 
-        // 2. Update fields
+        // Update fields
         user.setPassword(userPasswordDto.getPassword());
 
-        // 3. Save updated user
+        // Save updated user
         return userRepository.save(user);
     }
 
     public User changeUserUsername(UserUsernameDto userUsernameDto) {
-        // 1. Fetch existing user
+        // Fetch existing user
         Optional<User> optionalUser = userRepository.findById(userUsernameDto.getId());
         if (optionalUser.isEmpty()) {
             throw new RuntimeException("User not found with ID: " + userUsernameDto.getId());
@@ -89,15 +90,15 @@ public class UserService {
 
         User user = optionalUser.get();
 
-        // 2. Update fields
+        // Update fields
         user.setPassword(userUsernameDto.getUsername());
 
-        // 3. Save updated user
+        // Save updated user
         return userRepository.save(user);
     }
 
     public User changeUserEmail(UserEmailDto userEmailDto) {
-        // 1. Fetch existing user
+        // Fetch existing user
         Optional<User> optionalUser = userRepository.findById(userEmailDto.getId());
         if (optionalUser.isEmpty()) {
             throw new RuntimeException("User not found with ID: " + userEmailDto.getId());
@@ -105,15 +106,15 @@ public class UserService {
 
         User user = optionalUser.get();
 
-        // 2. Update fields
+        // Update fields
         user.setEmail(userEmailDto.getEmail());
 
-        // 3. Save updated user
+        // Save updated user
         return userRepository.save(user);
     }
 
     public User changeUserFirstName(UserFirstNameDto userFirstNameDto) {
-        // 1. Fetch existing user
+        // Fetch existing user
         Optional<User> optionalUser = userRepository.findById(userFirstNameDto.getId());
         if (optionalUser.isEmpty()) {
             throw new RuntimeException("User not found with ID: " + userFirstNameDto.getId());
@@ -121,15 +122,15 @@ public class UserService {
 
         User user = optionalUser.get();
 
-        // 2. Update fields
+        // Update fields
         user.setFirstName(userFirstNameDto.getFirstName());
 
-        // 3. Save updated user
+        // Save updated user
         return userRepository.save(user);
     }
 
     public User changeUserLastName(UserLastNameDto userLastNameDto) {
-        // 1. Fetch existing user
+        // Fetch existing user
         Optional<User> optionalUser = userRepository.findById(userLastNameDto.getId());
         if (optionalUser.isEmpty()) {
             throw new RuntimeException("User not found with ID: " + userLastNameDto.getId());
@@ -137,15 +138,15 @@ public class UserService {
 
         User user = optionalUser.get();
 
-        // 2. Update fields
+        // Update fields
         user.setLastName(userLastNameDto.getLastName());
 
-        // 3. Save updated user
+        // Save updated user
         return userRepository.save(user);
     }
 
     public User changeUserAddress(UserAddressDto userAddressDto) {
-        // 1. Fetch existing user
+        // Fetch existing user
         Optional<User> optionalUser = userRepository.findById(userAddressDto.getId());
         if (optionalUser.isEmpty()) {
             throw new RuntimeException("User not found with ID: " + userAddressDto.getId());
@@ -153,15 +154,15 @@ public class UserService {
 
         User user = optionalUser.get();
 
-        // 2. Update fields
+        // Update fields
         user.setAddress(userAddressDto.getAddress());
 
-        // 3. Save updated user
+        // Save updated user
         return userRepository.save(user);
     }
 
     public User changeUserPhone(UserPhoneDto userPhoneDto) {
-        // 1. Fetch existing user
+        // Fetch existing user
         Optional<User> optionalUser = userRepository.findById(userPhoneDto.getId());
         if (optionalUser.isEmpty()) {
             throw new RuntimeException("User not found with ID: " + userPhoneDto.getId());
@@ -169,15 +170,15 @@ public class UserService {
 
         User user = optionalUser.get();
 
-        // 2. Update fields
+        // Update fields
         user.setPhone(userPhoneDto.getPhone());
 
-        // 3. Save updated user
+        // Save updated user
         return userRepository.save(user);
     }
 
     public User changeDateOfBirth(UserDateOfBirthDto userDateOfBirthDto) {
-        // 1. Fetch existing user
+        // Fetch existing user
         Optional<User> optionalUser = userRepository.findById(userDateOfBirthDto.getId());
         if (optionalUser.isEmpty()) {
             throw new RuntimeException("User not found with ID: " + userDateOfBirthDto.getId());
@@ -185,10 +186,34 @@ public class UserService {
 
         User user = optionalUser.get();
 
-        // 2. Update fields
+        // Update fields
         user.setDateOfBirth(userDateOfBirthDto.getDateOfBirth());
+
+        // Save updated user
+        return userRepository.save(user);
+    }
+
+    /*
+    public User deleteUserById(UserDefaultDto userDefaultDto) {
+
+        Optional<User> optionalUser = userRepository.findById(userDefaultDto.getId());
+        if (optionalUser.isEmpty()) {
+            throw new RuntimeException("User not found with ID: " + userDefaultDto.getId());
+        }
+
+        User user = optionalUser.get();
+        userRepository.deleteById(user.getId());
 
         // 3. Save updated user
         return userRepository.save(user);
+    }
+     */
+
+    public void deleteUserById(Long id) {
+        if (!userRepository.existsById(id)) {
+            throw new RuntimeException("User not found with ID: " + id);
+        }
+
+        userRepository.deleteById(id);
     }
 }

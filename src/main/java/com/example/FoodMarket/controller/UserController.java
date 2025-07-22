@@ -159,4 +159,56 @@ public class UserController {
 
         return ResponseEntity.ok(responseDto);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteUser(@PathVariable Long id) {
+        userService.deleteUserById(id);
+        return ResponseEntity.ok("User with ID " + id + " deleted successfully.");
+    }
+
+    /*
+    @PutMapping("/changeData/{id}")
+    public ResponseEntity<UserDateOfBirthDto> updateData(
+            @PathVariable Long id,
+            @RequestBody UserDefaultDto userDefaultDto) {
+
+        userDefaultDto.setId(id);  // ensure path ID and DTO ID are in sync
+
+        User updatedUser = new User();
+
+        String tmp_str = userDefaultDto.getEmail();
+        if (tmp_str != null && !tmp_str.isEmpty())
+            updatedUser.setEmail(userService.changeUserEmail(new UserEmailDto(id, userDefaultDto.getEmail())).getEmail());
+
+        tmp_str = userDefaultDto.getUsername();
+        if (tmp_str != null && !tmp_str.isEmpty())
+            updatedUser.setUsername(userService.changeUserUsername(new UserUsernameDto(id, userDefaultDto.getUsername())).getUsername());
+
+        tmp_str = userDefaultDto.getPassword();
+        if (tmp_str != null && !tmp_str.isEmpty())
+            updatedUser.setPassword(userService.changeUserPassword(new UserPasswordDto(id, userDefaultDto.getPassword())).getPassword());
+
+        tmp_str = userDefaultDto.getPhone();
+        if (tmp_str != null && !tmp_str.isEmpty())
+            updatedUser.setPhone(userService.changeUserPhone(new UserPhoneDto(id, userDefaultDto.getPhone())).getPhone());
+
+        tmp_str = userDefaultDto.getAddress();
+        if (tmp_str != null && !tmp_str.isEmpty())
+            updatedUser.setAddress(userService.changeUserAddress(new UserAddressDto(id, userDefaultDto.getAddress())).getAddress());
+
+        LocalDate tmp_date = userDefaultDto.getDateOfBirth();
+        if (userDefaultDto.getDateOfBirth() != null)
+            updatedUser.setEmail(userService.changeUserEmail(new UserEmailDto(id, userDefaultDto.getEmail())).getEmail());
+
+        //User updatedUser = userService.changeDateOfBirth(userDto);
+
+        // Map entity to DTO (you can use a mapper method/service here)
+        UserDateOfBirthDto responseDto = new UserDateOfBirthDto();
+
+        responseDto.setDateOfBirth(updatedUser.getDateOfBirth());
+
+        return ResponseEntity.ok(responseDto);
+
+    }
+     */
 }

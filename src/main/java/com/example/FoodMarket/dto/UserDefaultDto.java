@@ -4,6 +4,8 @@ import java.time.LocalDate;
 
 public class UserDefaultDto {
 
+    private Long id;
+
     private String username;
 
     private String password;
@@ -22,7 +24,8 @@ public class UserDefaultDto {
 
     public UserDefaultDto() {}
 
-    public UserDefaultDto(String username, String password, String email, String firstName, String lastName, String address, String phone, LocalDate dateOfBirth) {
+    public UserDefaultDto(Long id, String username, String password, String email, String firstName, String lastName, String address, String phone, LocalDate dateOfBirth) {
+        this.id = id;
         this.username = username;
         this.password = password;
         this.email = email;
@@ -31,6 +34,14 @@ public class UserDefaultDto {
         this.address = address;
         this.phone = phone;
         this.dateOfBirth = dateOfBirth;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getUsername() {

@@ -8,7 +8,7 @@
 ' dot = mandatory field
 
 ' avoid problems with angled crows feet
-'skinparam linetype ortho
+' skinparam linetype ortho
 
 class "Users" {
     *id : Long <<generated>>

@@ -1,1 +1,8 @@
-= finish the many to many sql generator
+= crud operations for:
+    - category
+    - employee
+    - ingredient
+    - order
+    - orderStatus
+    - product
+    - seller

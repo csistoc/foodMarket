@@ -18,7 +18,7 @@ public class Seller {
 
     private String phone;
 
-    @OneToMany(mappedBy = "seller")
+    @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Employee> employees;
 
     @ManyToMany(cascade = { CascadeType.ALL })
