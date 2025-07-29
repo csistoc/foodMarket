@@ -1,7 +1,121 @@
 package com.example.FoodMarket.service;
 
+import com.example.FoodMarket.dto.*;
+import com.example.FoodMarket.model.*;
+import com.example.FoodMarket.repository.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
+
+    @Autowired
+    private ProductRepository productRepository;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
+
+    @Autowired
+    private IngredientRepository ingredientRepository;
+
+    @Autowired
+    private SellerRepository sellerRepository;
+
+    @Autowired
+    private OrderRepository orderRepository;
+
+    public ProductDefaultDto convertToDefaultDto(Product product) {
+
+        ProductDefaultDto productDefaultDto = new ProductDefaultDto();
+
+        productDefaultDto.setId(product.getId());
+        productDefaultDto.setName(product.getName());
+
+        Set<Long> categoryIds = new HashSet<>();
+        for(Category i : product.getCategories())
+            categoryIds.add(i.getId());
+        productDefaultDto.setCategoryIds(categoryIds);
+
+        Set<Long> ingredientIds = new HashSet<>();
+        for(Ingredient i : product.getIngredients())
+            ingredientIds.add(i.getId());
+        productDefaultDto.setIngredientIds(ingredientIds);
+
+        Set<Long> sellerIds = new HashSet<>();
+        for(Seller i : product.getSellers())
+            sellerIds.add(i.getId());
+        productDefaultDto.setSellerIds(sellerIds);
+
+        Set<Long> orderIds = new HashSet<>();
+        for(Order i : product.getOrders())
+            orderIds.add(i.getId());
+        productDefaultDto.setOrderIds(orderIds);
+
+        return productDefaultDto;
+    }
+
+    public List<ProductDefaultDto> getAllCategoriesAsDefaultDto() {
+        return ((List<Product>)productRepository.findAll())
+                .stream()
+                .map(this::convertToDefaultDto)
+                .collect(Collectors.toList());
+    }
+
+    public Product addProductFromDto(ProductCreateDto productCreateDto) {
+
+        Product product = new Product();
+
+        product.setName(productCreateDto.getName());
+
+        Set<Category> categories = new HashSet<>();
+        for (Long categoryId : productCreateDto.getCategoryIds()) {
+            Optional<Category> categoryOpt = categoryRepository.findById(categoryId);
+            categoryOpt.ifPresent(categories::add);
+        }
+        product.setCategories(categories);
+
+        Set<Ingredient> ingredients = new HashSet<>();
+        for (Long ingredientId : productCreateDto.getIngredientIds()) {
+            Optional<Ingredient> ingredientOpt = ingredientRepository.findById(ingredientId);
+            ingredientOpt.ifPresent(ingredients::add);
+        }
+        product.setIngredients(ingredients);
+
+        Set<Seller> sellers = new HashSet<>();
+        for (Long sellerId : productCreateDto.getSellerIds()) {
+            Optional<Seller> sellerOpt = sellerRepository.findById(sellerId);
+            sellerOpt.ifPresent(sellers::add);
+        }
+        product.setSellers(sellers);
+
+        Set<Order> orders = new HashSet<>();
+        for (Long orderId : productCreateDto.getOrderIds()) {
+            Optional<Order> orderOpt = orderRepository.findById(orderId);
+            orderOpt.ifPresent(orders::add);
+        }
+        product.setOrders(orders);
+
+        return productRepository.save(product);
+    }
+
+    public Product changeProductName(ProductNameDto productNameDto) {
+        // Fetch existing
+        Optional<Product> optionalProduct = productRepository.findById(productNameDto.getId());
+        if (optionalProduct.isEmpty()) {
+            throw new RuntimeException("User not found with ID: " + productNameDto.getId());
+        }
+
+        Product product = optionalProduct.get();
+
+        // Update fields
+        product.setName(productNameDto.getName());
+
+        return productRepository.save(product);
+    }
 }

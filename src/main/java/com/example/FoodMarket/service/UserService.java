@@ -30,17 +30,17 @@ public class UserService {
                 );
     }
 
-    public User addUserFromDto(UserDefaultDto userDefaultDto) {
+    public User addUserFromDto(UserCreateDto userCreateDto) {
         // Optionally hash the password here
         User user = new User(
-                userDefaultDto.getUsername(),
-                userDefaultDto.getPassword(),
-                userDefaultDto.getEmail(),
-                userDefaultDto.getFirstName(),
-                userDefaultDto.getLastName(),
-                userDefaultDto.getAddress(),
-                userDefaultDto.getPhone(),
-                userDefaultDto.getDateOfBirth(),
+                userCreateDto.getUsername(),
+                userCreateDto.getPassword(),
+                userCreateDto.getEmail(),
+                userCreateDto.getFirstName(),
+                userCreateDto.getLastName(),
+                userCreateDto.getAddress(),
+                userCreateDto.getPhone(),
+                userCreateDto.getDateOfBirth(),
                 false,
                 false
         );

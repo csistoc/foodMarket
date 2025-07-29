@@ -28,8 +28,8 @@ public class UserController {
     }
 
     @PostMapping("/add")
-    public User createUser(@RequestBody UserDefaultDto userDto) {
-        return userService.addUserFromDto(userDto);
+    public User createUser(@RequestBody UserCreateDto userCreateDto) {
+        return userService.addUserFromDto(userCreateDto);
     }
 
     @PutMapping("/changePassword/{id}")
