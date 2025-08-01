@@ -1,9 +1,10 @@
 package com.example.FoodMarket.service;
 
-import com.example.FoodMarket.dto.*;
+import com.example.FoodMarket.dto.ProductCreateDto;
+import com.example.FoodMarket.dto.ProductDefaultDto;
+import com.example.FoodMarket.dto.ProductNameDto;
 import com.example.FoodMarket.model.*;
 import com.example.FoodMarket.repository.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -15,20 +16,23 @@ import java.util.stream.Collectors;
 @Service
 public class ProductService {
 
-    @Autowired
-    private ProductRepository productRepository;
+    private final ProductRepository productRepository;
 
-    @Autowired
-    private CategoryRepository categoryRepository;
+    private final CategoryRepository categoryRepository;
 
-    @Autowired
-    private IngredientRepository ingredientRepository;
+    private final IngredientRepository ingredientRepository;
 
-    @Autowired
-    private SellerRepository sellerRepository;
+    private final SellerRepository sellerRepository;
 
-    @Autowired
-    private OrderRepository orderRepository;
+    private final OrderRepository orderRepository;
+
+    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository, IngredientRepository ingredientRepository, SellerRepository sellerRepository, OrderRepository orderRepository) {
+        this.productRepository = productRepository;
+        this.categoryRepository = categoryRepository;
+        this.ingredientRepository = ingredientRepository;
+        this.sellerRepository = sellerRepository;
+        this.orderRepository = orderRepository;
+    }
 
     public ProductDefaultDto convertToDefaultDto(Product product) {
 
@@ -60,7 +64,7 @@ public class ProductService {
         return productDefaultDto;
     }
 
-    public List<ProductDefaultDto> getAllCategoriesAsDefaultDto() {
+    public List<ProductDefaultDto> getAllProductsAsDefaultDto() {
         return ((List<Product>)productRepository.findAll())
                 .stream()
                 .map(this::convertToDefaultDto)
@@ -117,5 +121,13 @@ public class ProductService {
         product.setName(productNameDto.getName());
 
         return productRepository.save(product);
+    }
+
+    public void deleteProductById(Long id) {
+        if (!productRepository.existsById(id)) {
+            throw new RuntimeException("User not found with ID: " + id);
+        }
+
+        productRepository.deleteById(id);
     }
 }

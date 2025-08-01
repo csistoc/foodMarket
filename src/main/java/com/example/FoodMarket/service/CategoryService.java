@@ -3,13 +3,10 @@ package com.example.FoodMarket.service;
 import com.example.FoodMarket.dto.CategoryCreateDto;
 import com.example.FoodMarket.dto.CategoryDefaultDto;
 import com.example.FoodMarket.dto.CategoryNameDto;
-import com.example.FoodMarket.dto.UserPasswordDto;
 import com.example.FoodMarket.model.Category;
 import com.example.FoodMarket.model.Product;
-import com.example.FoodMarket.model.User;
 import com.example.FoodMarket.repository.CategoryRepository;
 import com.example.FoodMarket.repository.ProductRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -21,11 +18,14 @@ import java.util.stream.Collectors;
 @Service
 public class CategoryService {
 
-    @Autowired
-    private CategoryRepository categoryRepository;
+    private final CategoryRepository categoryRepository;
 
-    @Autowired
-    private ProductRepository productRepository;
+    private final ProductRepository productRepository;
+
+    public CategoryService(CategoryRepository categoryRepository, ProductRepository productRepository) {
+        this.categoryRepository = categoryRepository;
+        this.productRepository = productRepository;
+    }
 
     public CategoryDefaultDto convertToDefaultDto(Category category) {
 
@@ -80,5 +80,13 @@ public class CategoryService {
         category.setName(categoryNameDto.getName());
 
         return categoryRepository.save(category);
+    }
+
+    public void deleteCategoryById(Long id) {
+        if (!categoryRepository.existsById(id)) {
+            throw new RuntimeException("Category not found with ID: " + id);
+        }
+
+        categoryRepository.deleteById(id);
     }
 }

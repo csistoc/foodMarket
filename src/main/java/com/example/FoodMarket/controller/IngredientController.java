@@ -1,10 +1,10 @@
 package com.example.FoodMarket.controller;
 
-import com.example.FoodMarket.dto.*;
-import com.example.FoodMarket.model.Category;
+import com.example.FoodMarket.dto.IngredientCreateDto;
+import com.example.FoodMarket.dto.IngredientDefaultDto;
+import com.example.FoodMarket.dto.IngredientNameDto;
 import com.example.FoodMarket.model.Ingredient;
 import com.example.FoodMarket.service.IngredientService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,8 +15,11 @@ import java.util.List;
 //localhost:8080/ingredient
 public class IngredientController {
 
-    @Autowired
-    private IngredientService ingredientService;
+    private final IngredientService ingredientService;
+
+    public IngredientController(IngredientService ingredientService) {
+        this.ingredientService = ingredientService;
+    }
 
     @GetMapping
     public List<IngredientDefaultDto> getAllIngredients() {
@@ -42,5 +45,11 @@ public class IngredientController {
         responseDto.setName(updatedIngredient.getName());
 
         return ResponseEntity.ok(responseDto);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteIngredient(@PathVariable Long id) {
+        ingredientService.deleteIngredientById(id);
+        return ResponseEntity.ok("User with ID " + id + " deleted successfully.");
     }
 }

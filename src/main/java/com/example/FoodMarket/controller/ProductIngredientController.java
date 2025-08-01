@@ -2,7 +2,6 @@ package com.example.FoodMarket.controller;
 
 import com.example.FoodMarket.dto.ProductIngredientDto;
 import com.example.FoodMarket.service.ProductIngredientService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,8 +10,11 @@ import org.springframework.web.bind.annotation.*;
 //localhost:8080/product-ingredient
 public class ProductIngredientController {
 
-    @Autowired
-    private ProductIngredientService productIngredientService;
+    private final ProductIngredientService productIngredientService;
+
+    public ProductIngredientController(ProductIngredientService productIngredientService) {
+        this.productIngredientService = productIngredientService;
+    }
 
     @PostMapping("/add")
     public ResponseEntity<String> addIngredientToProduct(@RequestBody ProductIngredientDto dto) {

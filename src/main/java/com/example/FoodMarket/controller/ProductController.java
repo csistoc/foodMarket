@@ -1,9 +1,10 @@
 package com.example.FoodMarket.controller;
 
-import com.example.FoodMarket.dto.*;
+import com.example.FoodMarket.dto.ProductCreateDto;
+import com.example.FoodMarket.dto.ProductDefaultDto;
+import com.example.FoodMarket.dto.ProductNameDto;
 import com.example.FoodMarket.model.Product;
 import com.example.FoodMarket.service.ProductService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,12 +15,15 @@ import java.util.List;
 //localhost:8080/product
 public class ProductController {
 
-    @Autowired
-    private ProductService productService;
+    private final ProductService productService;
+
+    public ProductController(ProductService productService) {
+        this.productService = productService;
+    }
 
     @GetMapping
     public List<ProductDefaultDto> getAllProducts() {
-        return productService.getAllCategoriesAsDefaultDto();
+        return productService.getAllProductsAsDefaultDto();
     }
 
     @PostMapping("/add")
@@ -41,5 +45,11 @@ public class ProductController {
         responseDto.setName(updatedProduct.getName());
 
         return ResponseEntity.ok(responseDto);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteProduct(@PathVariable Long id) {
+        productService.deleteProductById(id);
+        return ResponseEntity.ok("User with ID " + id + " deleted successfully.");
     }
 }

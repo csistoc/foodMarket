@@ -1,11 +1,12 @@
 package com.example.FoodMarket.service;
 
-import com.example.FoodMarket.dto.*;
+import com.example.FoodMarket.dto.IngredientCreateDto;
+import com.example.FoodMarket.dto.IngredientDefaultDto;
+import com.example.FoodMarket.dto.IngredientNameDto;
 import com.example.FoodMarket.model.Ingredient;
 import com.example.FoodMarket.model.Product;
 import com.example.FoodMarket.repository.IngredientRepository;
 import com.example.FoodMarket.repository.ProductRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -17,11 +18,14 @@ import java.util.stream.Collectors;
 @Service
 public class IngredientService {
 
-    @Autowired
-    private IngredientRepository ingredientRepository;
+    private final IngredientRepository ingredientRepository;
 
-    @Autowired
-    private ProductRepository productRepository;
+    private final ProductRepository productRepository;
+
+    public IngredientService(IngredientRepository ingredientRepository, ProductRepository productRepository) {
+        this.ingredientRepository = ingredientRepository;
+        this.productRepository = productRepository;
+    }
 
     public IngredientDefaultDto convertToDefaultDto(Ingredient ingredient) {
 
@@ -76,5 +80,13 @@ public class IngredientService {
         ingredient.setName(ingredientNameDto.getName());
 
         return ingredientRepository.save(ingredient);
+    }
+
+    public void deleteIngredientById(Long id) {
+        if (!ingredientRepository.existsById(id)) {
+            throw new RuntimeException("User not found with ID: " + id);
+        }
+
+        ingredientRepository.deleteById(id);
     }
 }

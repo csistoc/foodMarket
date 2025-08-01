@@ -5,7 +5,6 @@ import com.example.FoodMarket.dto.CategoryDefaultDto;
 import com.example.FoodMarket.dto.CategoryNameDto;
 import com.example.FoodMarket.model.Category;
 import com.example.FoodMarket.service.CategoryService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,8 +15,11 @@ import java.util.List;
 //localhost:8080/category
 public class CategoryController {
 
-    @Autowired
-    private CategoryService categoryService;
+    private final CategoryService categoryService;
+
+    public CategoryController(CategoryService categoryService) {
+        this.categoryService = categoryService;
+    }
 
     @GetMapping
     public List<CategoryDefaultDto> getAllCategories() {
@@ -43,5 +45,11 @@ public class CategoryController {
         responseDto.setName(updatedCategory.getName());
 
         return ResponseEntity.ok(responseDto);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteCategory(@PathVariable Long id) {
+        categoryService.deleteCategoryById(id);
+        return ResponseEntity.ok("Category with ID " + id + " deleted successfully.");
     }
 }

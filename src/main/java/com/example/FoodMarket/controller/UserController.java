@@ -3,7 +3,6 @@ package com.example.FoodMarket.controller;
 import com.example.FoodMarket.dto.*;
 import com.example.FoodMarket.model.User;
 import com.example.FoodMarket.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,8 +13,11 @@ import java.util.List;
 //localhost:8080/user
 public class UserController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping
     public List<UserDefaultDto> getAllUsers() {

@@ -5,7 +5,6 @@ import com.example.FoodMarket.model.Ingredient;
 import com.example.FoodMarket.model.Product;
 import com.example.FoodMarket.repository.IngredientRepository;
 import com.example.FoodMarket.repository.ProductRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -13,11 +12,14 @@ import java.util.Optional;
 @Service
 public class ProductIngredientService {
 
-    @Autowired
-    private ProductRepository productRepository;
+    private final ProductRepository productRepository;
 
-    @Autowired
-    private IngredientRepository ingredientRepository;
+    private final IngredientRepository ingredientRepository;
+
+    public ProductIngredientService(ProductRepository productRepository, IngredientRepository ingredientRepository) {
+        this.productRepository = productRepository;
+        this.ingredientRepository = ingredientRepository;
+    }
 
     public String addIngredientToProduct(ProductIngredientDto dto) {
         Optional<Product> productOpt = productRepository.findById(dto.getProductId());

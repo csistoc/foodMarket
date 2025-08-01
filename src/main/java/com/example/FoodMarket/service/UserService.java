@@ -3,7 +3,6 @@ package com.example.FoodMarket.service;
 import com.example.FoodMarket.dto.*;
 import com.example.FoodMarket.model.User;
 import com.example.FoodMarket.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,8 +12,11 @@ import java.util.stream.Collectors;
 @Service
 public class UserService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     public UserDefaultDto convertToDefaultDto(User user) {
         return new UserDefaultDto(

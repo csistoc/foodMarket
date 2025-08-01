@@ -2,7 +2,6 @@ package com.example.FoodMarket.controller;
 
 import com.example.FoodMarket.dto.ProductCategoryDto;
 import com.example.FoodMarket.service.ProductCategoryService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,8 +10,11 @@ import org.springframework.web.bind.annotation.*;
 //localhost:8080/product-category
 public class ProductCategoryController {
 
-    @Autowired
-    private ProductCategoryService productCategoryService;
+    private final ProductCategoryService productCategoryService;
+
+    public ProductCategoryController(ProductCategoryService productCategoryService) {
+        this.productCategoryService = productCategoryService;
+    }
 
     @PostMapping("/add")
     public ResponseEntity<String> addProductToCategory(@RequestBody ProductCategoryDto dto) {
