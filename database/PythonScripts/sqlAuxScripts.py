@@ -33,10 +33,11 @@ def generate_user_table_insert_query(username_file, country_name_file,table_name
         address = escape_sql(random.choice(country_list))
         phone_number = escape_sql(generate_fake_phone_number())
         date_of_birth = generate_random_date("01-01-1950", "01-01-2000").strftime('%Y-%m-%d')
+        is_user_seller = str(random.choice([True, False])).upper()
         inserts.append(
             f"INSERT INTO {table_name} VALUES (DEFAULT, '{username}', '{password}', "
             f"'{email}', '{first_name}', '{last_name}', '{address}', '{str(phone_number)}', "
-            f"'{date_of_birth}', FALSE, FALSE);\n"
+            f"'{date_of_birth}', {is_user_seller}, FALSE);\n"
         )
 
     return "\n".join(inserts)
@@ -231,6 +232,47 @@ def generate_many_to_many_inserts(join_table, left_ids, right_ids, num_links):
         )
 
     return "\n".join(inserts)
+
+
+def get_user_id_for_employee_inserts(db_username, db_password, table_name='USERS', id_column='id', field_name='is_user_seller'):
+    """
+    Connects to an H2 database and retrieves a list of values from a specified ID column in a table.
+
+    :param db_username: Username for the database connection
+    :param db_password: Password for the database connection
+    :param table_name: Name of the table to query (default is 'USERS')
+    :param id_column: Name of the column containing the IDs (default is 'id')
+    :param field_name: Name of the column where we check if the user is a seller (default is 'is_user_seller')
+    :return: A list of IDs retrieved from the specified table
+    """
+
+    # Configuration
+    h2_jar_path = r"C:\Program Files (x86)\H2\bin\h2-2.3.232.jar"
+    jdbc_url = "jdbc:h2:file:C:/Users/stefa/IdeaProjects/FoodMarket/database/h2database"
+    jdbc_driver = "org.h2.Driver"
+
+    # Connect to the H2 database
+    conn = jaydebeapi.connect(
+        jdbc_driver,
+        jdbc_url,
+        [db_username, db_password],
+        h2_jar_path
+    )
+
+    # Create a cursor object and execute a SQL query to retrieve IDs
+    cursor = conn.cursor()
+    cursor.execute(f"SELECT {id_column} FROM {table_name} WHERE {field_name} = TRUE")
+    rows = cursor.fetchall()
+
+    # Extract only the ID values from the result set
+    ids = [row[0] for row in rows]
+
+    # Clean up
+    cursor.close()
+    conn.close()
+
+    return ids
+
 
 def generate_inserts_with_three_random_ids(insert_table, table1, table2, table3, numb, db_username, db_password):
     """

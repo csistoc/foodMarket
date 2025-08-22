@@ -29,6 +29,9 @@ public class Seller {
     )
     private Set<Product> products;
 
+    @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<User> users;
+
     public Seller() { }
 
     public Seller(String name, String address, String phone, Set<Employee> employees, Set<Product> products) {

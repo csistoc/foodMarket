@@ -50,6 +50,6 @@ public class IngredientController {
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteIngredient(@PathVariable Long id) {
         ingredientService.deleteIngredientById(id);
-        return ResponseEntity.ok("User with ID " + id + " deleted successfully.");
+        return ResponseEntity.ok("Ingredient with ID " + id + " deleted successfully.");
     }
 }

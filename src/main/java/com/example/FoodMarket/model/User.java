@@ -40,6 +40,14 @@ public class User {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Employee employee;
 
+    /*
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "seller_id", referencedColumnName = "id", nullable = false)
+    private Seller seller;
+
+     */
+
     public User() { }
 
     public User(String username, String password, String email, String firstName, String lastName, String address, String phone, LocalDate dateOfBirth, Boolean isUserSeller, Boolean isUserAdmin) {
