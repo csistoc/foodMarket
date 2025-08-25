@@ -1,12 +1,17 @@
 package com.example.FoodMarket.service;
 
 import com.example.FoodMarket.dto.*;
+import com.example.FoodMarket.model.Order;
+import com.example.FoodMarket.model.Product;
+import com.example.FoodMarket.model.Seller;
 import com.example.FoodMarket.model.User;
 import com.example.FoodMarket.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -19,17 +24,29 @@ public class UserService {
     }
 
     public UserDefaultDto convertToDefaultDto(User user) {
-        return new UserDefaultDto(
-                user.getId(),
-                user.getUsername(),
-                user.getPassword(),
-                user.getEmail(),
-                user.getFirstName(),
-                user.getLastName(),
-                user.getAddress(),
-                user.getPhone(),
-                user.getDateOfBirth()
-                );
+        UserDefaultDto userDefaultDto = new UserDefaultDto();
+
+        userDefaultDto.setId(user.getId());
+        userDefaultDto.setUsername(user.getUsername());
+        userDefaultDto.setPassword(user.getPassword());
+        userDefaultDto.setEmail(user.getEmail());
+        userDefaultDto.setFirstName(user.getFirstName());
+        userDefaultDto.setLastName(user.getLastName());
+        userDefaultDto.setAddress(user.getAddress());
+        userDefaultDto.setPhone(user.getPhone());
+        userDefaultDto.setDateOfBirth(user.getDateOfBirth());
+
+        Set<Long> orderIds = new HashSet<>();
+        for(Order i : user.getOrders())
+            orderIds.add(i.getId());
+        userDefaultDto.setOrderIds(orderIds);
+
+        Set<Long> sellerIds = new HashSet<>();
+        for(Seller i : user.getSellers())
+            sellerIds.add(i.getId());
+        userDefaultDto.setSellerIds(sellerIds);
+
+        return userDefaultDto;
     }
 
     public User addUserFromDto(UserCreateDto userCreateDto) {
@@ -42,11 +59,8 @@ public class UserService {
                 userCreateDto.getLastName(),
                 userCreateDto.getAddress(),
                 userCreateDto.getPhone(),
-                userCreateDto.getDateOfBirth(),
-                false,
-                false
+                userCreateDto.getDateOfBirth()
         );
-        System.out.println("User Date of Birth: " + user.getDateOfBirth());
         return userRepository.save(user);
     }
 

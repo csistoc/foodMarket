@@ -29,17 +29,18 @@ public class Seller {
     )
     private Set<Product> products;
 
-    @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ManyToMany(mappedBy = "users")
     private Set<User> users;
 
     public Seller() { }
 
-    public Seller(String name, String address, String phone, Set<Employee> employees, Set<Product> products) {
+    public Seller(String name, String address, String phone, Set<Employee> employees, Set<Product> products, Set<User> users) {
         this.name = name;
         this.address = address;
         this.phone = phone;
         this.employees = employees;
         this.products = products;
+        this.users = users;
     }
 
     public Long getId() {
@@ -88,5 +89,13 @@ public class Seller {
 
     public void setProducts(Set<Product> products) {
         this.products = products;
+    }
+
+    public Set<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(Set<User> users) {
+        this.users = users;
     }
 }

@@ -21,10 +21,6 @@ class "Users" {
     *address : String
     *phone : String
     birth_date : Date
-    --
-    *is_user_seller : Boolean
-    --
-    *is_user_admin : Boolean
 }
 
 class "Sellers" {
@@ -102,9 +98,9 @@ class "Order_Products" {
     *product_id : Long <<FK>>
 }
 
-Users "1" -- Employees
+Users -- "many" Employees
 
-Sellers "1" -- "many" Employees
+Sellers -- "many" Employees
 
 Products "many" -- "many" Sellers
 Seller_Products -- Sellers

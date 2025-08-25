@@ -33,11 +33,10 @@ def generate_user_table_insert_query(username_file, country_name_file,table_name
         address = escape_sql(random.choice(country_list))
         phone_number = escape_sql(generate_fake_phone_number())
         date_of_birth = generate_random_date("01-01-1950", "01-01-2000").strftime('%Y-%m-%d')
-        is_user_seller = str(random.choice([True, False])).upper()
         inserts.append(
             f"INSERT INTO {table_name} VALUES (DEFAULT, '{username}', '{password}', "
             f"'{email}', '{first_name}', '{last_name}', '{address}', '{str(phone_number)}', "
-            f"'{date_of_birth}', {is_user_seller}, FALSE);\n"
+            f"'{date_of_birth}');\n"
         )
 
     return "\n".join(inserts)
@@ -272,7 +271,6 @@ def get_user_id_for_employee_inserts(db_username, db_password, table_name='USERS
     conn.close()
 
     return ids
-
 
 def generate_inserts_with_three_random_ids(insert_table, table1, table2, table3, numb, db_username, db_password):
     """

@@ -1,6 +1,7 @@
 package com.example.FoodMarket.dto;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 public class UserDefaultDto {
 
@@ -22,9 +23,13 @@ public class UserDefaultDto {
 
     private LocalDate dateOfBirth;
 
+    private Set<Long> orderIds;
+
+    private Set<Long> sellerIds;
+
     public UserDefaultDto() {}
 
-    public UserDefaultDto(Long id, String username, String password, String email, String firstName, String lastName, String address, String phone, LocalDate dateOfBirth) {
+    public UserDefaultDto(Long id, String username, String password, String email, String firstName, String lastName, String address, String phone, LocalDate dateOfBirth, Set<Long> orders, Set<Long> sellers) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -34,6 +39,8 @@ public class UserDefaultDto {
         this.address = address;
         this.phone = phone;
         this.dateOfBirth = dateOfBirth;
+        this.orderIds = orders;
+        this.sellerIds = sellers;
     }
 
     public Long getId() {
@@ -106,5 +113,21 @@ public class UserDefaultDto {
 
     public void setDateOfBirth(LocalDate dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
+    }
+
+    public Set<Long> getOrderIds() {
+        return orderIds;
+    }
+
+    public void setOrderIds(Set<Long> orderIds) {
+        this.orderIds = orderIds;
+    }
+
+    public Set<Long> getSellerIds() {
+        return sellerIds;
+    }
+
+    public void setSellerIds(Set<Long> sellerIds) {
+        this.sellerIds = sellerIds;
     }
 }

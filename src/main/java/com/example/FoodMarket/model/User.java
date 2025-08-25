@@ -30,15 +30,18 @@ public class User {
     @Column(name = "birth_date")
     private LocalDate dateOfBirth;
 
-    private Boolean isUserSeller;
-
-    private Boolean isUserAdmin;
-
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Order> orders;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Employee employee;
+    //@OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+
+    @ManyToMany(cascade = { CascadeType.ALL })
+    @JoinTable(
+            name = "employees",
+            joinColumns = { @JoinColumn(name = "user_id") },
+            inverseJoinColumns = { @JoinColumn(name = "seller_id") }
+    )
+    private Set<Seller> sellers;
 
     /*
 
@@ -50,7 +53,7 @@ public class User {
 
     public User() { }
 
-    public User(String username, String password, String email, String firstName, String lastName, String address, String phone, LocalDate dateOfBirth, Boolean isUserSeller, Boolean isUserAdmin) {
+    public User(String username, String password, String email, String firstName, String lastName, String address, String phone, LocalDate dateOfBirth) {
         this.username = username;
         this.password = password;
         this.email = email;
@@ -59,12 +62,10 @@ public class User {
         this.address = address;
         this.phone = phone;
         this.dateOfBirth = dateOfBirth;
-        this.isUserSeller = isUserSeller;
-        this.isUserAdmin = isUserAdmin;
     }
 
     public User(Long id, String username, String password, String email, String firstName, String lastName, String address, String phone, LocalDate dateOfBirth,
-                Boolean isUserSeller, Boolean isUserAdmin, Set<Order> orders, Employee employee) {
+                Set<Order> orders, Set<Seller> sellers) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -74,10 +75,8 @@ public class User {
         this.address = address;
         this.phone = phone;
         this.dateOfBirth = dateOfBirth;
-        this.isUserSeller = isUserSeller;
-        this.isUserAdmin = isUserAdmin;
         this.orders = orders;
-        this.employee = employee;
+        this.sellers = sellers;
     }
 
     public Long getId() {
@@ -152,22 +151,6 @@ public class User {
         this.dateOfBirth = dateOfBirth;
     }
 
-    public Boolean getUserSeller() {
-        return isUserSeller;
-    }
-
-    public void setUserSeller(Boolean userSeller) {
-        isUserSeller = userSeller;
-    }
-
-    public Boolean getUserAdmin() {
-        return isUserAdmin;
-    }
-
-    public void setUserAdmin(Boolean userAdmin) {
-        isUserAdmin = userAdmin;
-    }
-
     public Set<Order> getOrders() {
         return orders;
     }
@@ -176,11 +159,11 @@ public class User {
         this.orders = orders;
     }
 
-    public Employee getEmployee() {
-        return employee;
+    public Set<Seller> getSellers() {
+        return sellers;
     }
 
-    public void setEmployee(Employee employee) {
-        this.employee = employee;
+    public void setSellers(Set<Seller> sellers) {
+        this.sellers = sellers;
     }
 }

@@ -36,9 +36,7 @@ CREATE TABLE IF NOT EXISTS USERS (
     last_name VARCHAR2(100),
     address VARCHAR2(100) NOT NULL,
     phone VARCHAR2(100) NOT NULL,
-    birth_date DATE,
-    is_user_seller BOOLEAN,
-    is_user_admin BOOLEAN
+    birth_date DATE
 );
 
 CREATE TABLE IF NOT EXISTS SELLERS (
