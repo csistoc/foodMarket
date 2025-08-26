@@ -1,24 +1,26 @@
 package com.example.FoodMarket.service;
 
-import com.example.FoodMarket.dto.EmployeeCreateDto;
-import com.example.FoodMarket.dto.EmployeeDefaultDto;
-import com.example.FoodMarket.dto.UserDefaultDto;
-import com.example.FoodMarket.model.Employee;
-import com.example.FoodMarket.model.User;
-import com.example.FoodMarket.repository.EmployeeRepository;
+import com.example.FoodMarket.dto.SellerUsersDto;
+import com.example.FoodMarket.model.*;
+import com.example.FoodMarket.repository.SellerRepository;
+import com.example.FoodMarket.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Service
 public class EmployeeService {
 
-    private final EmployeeRepository employeeRepository;
+    //private final EmployeeRepository employeeRepository;
+    private final UserRepository userRepository;
+    private final SellerRepository sellerRepository;
 
-    public EmployeeService(EmployeeRepository employeeRepository) {
-        this.employeeRepository = employeeRepository;
+    public EmployeeService(UserRepository userRepository, SellerRepository sellerRepository) {
+        this.userRepository = userRepository;
+        this.sellerRepository = sellerRepository;
     }
+
+    /*
 
     public EmployeeDefaultDto convertToDefaultDto(Employee employee) {
         return new EmployeeDefaultDto(
@@ -43,5 +45,53 @@ public class EmployeeService {
                 .collect(Collectors.toList());
     }
 
+     */
 
+    public String addUserToSeller(SellerUsersDto dto) {
+        Optional<User> userOpt = userRepository.findById(dto.getUserId());
+        Optional<Seller> sellerOpt = sellerRepository.findById(dto.getSellerId());
+
+        if (userOpt.isEmpty() || sellerOpt.isEmpty()) {
+            return "Seller or User not found.";
+        }
+
+        User user = userOpt.get();
+        Seller seller = sellerOpt.get();
+
+        // Check if already related
+        if (seller.getUsers().contains(user)) {
+            return "This user is already in the sellers list.";
+        }
+
+        // Add relationship
+        seller.getUsers().add(user);
+        user.getSellers().add(seller);
+
+        sellerRepository.save(seller); // Cascade saves join table entry
+        return "User added to sellers successfully.";
+    }
+
+    public String removeUserFromSeller(SellerUsersDto dto) {
+        Optional<User> userOpt = userRepository.findById(dto.getUserId());
+        Optional<Seller> sellerOpt = sellerRepository.findById(dto.getSellerId());
+
+        if (userOpt.isEmpty() || sellerOpt.isEmpty()) {
+            return "Seller or User not found.";
+        }
+
+        User user = userOpt.get();
+        Seller seller = sellerOpt.get();
+
+        // Check if already related
+        if (seller.getUsers().contains(user)) {
+            return "This user is already in the sellers list.";
+        }
+
+        // Remove relationship on both sides
+        seller.getUsers().remove(user);
+        user.getSellers().remove(seller);
+
+        sellerRepository.save(seller); // Cascade removes join table entry
+        return "User removed from sellers successfully.";
+    }
 }

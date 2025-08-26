@@ -29,7 +29,12 @@ public class Seller {
     )
     private Set<Product> products;
 
-    @ManyToMany(mappedBy = "users")
+    @ManyToMany(cascade = { CascadeType.ALL })
+    @JoinTable(
+            name = "employees",
+            joinColumns = { @JoinColumn(name = "seller_id") },
+            inverseJoinColumns = { @JoinColumn(name = "user_id") }
+    )
     private Set<User> users;
 
     public Seller() { }

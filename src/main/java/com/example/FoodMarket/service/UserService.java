@@ -1,10 +1,7 @@
 package com.example.FoodMarket.service;
 
 import com.example.FoodMarket.dto.*;
-import com.example.FoodMarket.model.Order;
-import com.example.FoodMarket.model.Product;
-import com.example.FoodMarket.model.Seller;
-import com.example.FoodMarket.model.User;
+import com.example.FoodMarket.model.*;
 import com.example.FoodMarket.repository.UserRepository;
 import org.springframework.stereotype.Service;
 

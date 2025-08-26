@@ -35,12 +35,7 @@ public class User {
 
     //@OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
 
-    @ManyToMany(cascade = { CascadeType.ALL })
-    @JoinTable(
-            name = "employees",
-            joinColumns = { @JoinColumn(name = "user_id") },
-            inverseJoinColumns = { @JoinColumn(name = "seller_id") }
-    )
+    @ManyToMany(mappedBy = "sellers")
     private Set<Seller> sellers;
 
     /*
