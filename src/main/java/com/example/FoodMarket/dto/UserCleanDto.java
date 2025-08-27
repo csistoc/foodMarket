@@ -2,7 +2,7 @@ package com.example.FoodMarket.dto;
 
 import java.time.LocalDate;
 
-public class UserCreateDto {
+public class UserCleanDto {
 
     private String username;
 
@@ -20,9 +20,9 @@ public class UserCreateDto {
 
     private LocalDate dateOfBirth;
 
-    public UserCreateDto() {}
+    public UserCleanDto() {}
 
-    public UserCreateDto(String username, String password, String email, String firstName, String lastName, String address, String phone, LocalDate dateOfBirth) {
+    public UserCleanDto(String username, String password, String email, String firstName, String lastName, String address, String phone, LocalDate dateOfBirth) {
         this.username = username;
         this.password = password;
         this.email = email;

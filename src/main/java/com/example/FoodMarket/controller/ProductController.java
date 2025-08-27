@@ -1,6 +1,6 @@
 package com.example.FoodMarket.controller;
 
-import com.example.FoodMarket.dto.ProductCreateDto;
+import com.example.FoodMarket.dto.ProductCleanDto;
 import com.example.FoodMarket.dto.ProductDefaultDto;
 import com.example.FoodMarket.dto.ProductNameDto;
 import com.example.FoodMarket.model.Product;
@@ -27,8 +27,8 @@ public class ProductController {
     }
 
     @PostMapping("/add")
-    public Product createProduct(@RequestBody ProductCreateDto productCreateDto) {
-        return productService.addProductFromDto(productCreateDto);
+    public Product createProduct(@RequestBody ProductCleanDto productCleanDto) {
+        return productService.addProductFromDto(productCleanDto);
     }
 
     @PutMapping("/changeName/{id}")

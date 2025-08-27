@@ -1,7 +1,6 @@
 package com.example.FoodMarket.controller;
 
 import com.example.FoodMarket.dto.*;
-import com.example.FoodMarket.model.Ingredient;
 import com.example.FoodMarket.model.OrderStatus;
 import com.example.FoodMarket.service.OrderStatusService;
 import org.springframework.http.ResponseEntity;
@@ -26,8 +25,8 @@ public class OrderStatusController {
     }
 
     @PostMapping("/add")
-    public OrderStatus createOrderStatus(@RequestBody OrderStatusCreateDto orderStatusCreateDto) {
-        return orderStatusService.addOrderStatusFromDto(orderStatusCreateDto);
+    public OrderStatus createOrderStatus(@RequestBody OrderStatusCleanDto orderStatusCleanDto) {
+        return orderStatusService.addOrderStatusFromDto(orderStatusCleanDto);
     }
 
     @PutMapping("/changeName/{id}")
@@ -46,7 +45,7 @@ public class OrderStatusController {
         return ResponseEntity.ok(responseDto);
     }
 
-    @PostMapping("/add")
+    @PostMapping("/addOrder")
     public ResponseEntity<String> addOrderToOrderStatus(@RequestBody OrderStatusOrderListDto dto) {
         String result = orderStatusService.addOrderToOrderStatus(dto);
 

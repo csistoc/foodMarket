@@ -1,8 +1,7 @@
 package com.example.FoodMarket.service;
 
-import com.example.FoodMarket.dto.CategoryCreateDto;
+import com.example.FoodMarket.dto.CategoryCleanDto;
 import com.example.FoodMarket.dto.CategoryDefaultDto;
-import com.example.FoodMarket.dto.CategoryNameDto;
 import com.example.FoodMarket.model.Category;
 import com.example.FoodMarket.model.Product;
 import com.example.FoodMarket.repository.CategoryRepository;
@@ -50,36 +49,42 @@ public class CategoryService {
                 .collect(Collectors.toList());
     }
 
-    public Category addCategoryFromDto(CategoryCreateDto categoryCreateDto) {
+    public CategoryDefaultDto addCategoryFromDto(CategoryCleanDto dto) {
 
         Category category = new Category();
 
-        category.setName(categoryCreateDto.getName());
+        category.setName(dto.getName());
 
         Set<Product> products = new HashSet<>();
-        for (Long productId : categoryCreateDto.getProductIds()) {
+        for (Long productId : dto.getProductIds()) {
             Optional<Product> productOpt = productRepository.findById(productId);
             productOpt.ifPresent(products::add);
         }
 
         category.setProducts(products);
 
-        return categoryRepository.save(category);
+        return convertToDefaultDto(categoryRepository.save(category));
     }
 
-    public Category changeCategoryName(CategoryNameDto categoryNameDto) {
-        // Fetch existing
-        Optional<Category> optionalCategory = categoryRepository.findById(categoryNameDto.getId());
-        if (optionalCategory.isEmpty()) {
-            throw new RuntimeException("User not found with ID: " + categoryNameDto.getId());
+    public CategoryDefaultDto updateCategory(Long id, CategoryCleanDto dto) {
+        // Find category by ID
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Category not found with id: " + id));
+
+        // Update simple fields
+        if (dto.getName() != null) {
+            category.setName(dto.getName());
         }
 
-        Category category = optionalCategory.get();
+        // Update products if provided
+        if (dto.getProductIds() != null && !dto.getProductIds().isEmpty()) {
+            Iterable<Product> foundProducts = productRepository.findAllById(dto.getProductIds());
+            Set<Product> products = new HashSet<>();
+            foundProducts.forEach(products::add);
+            category.setProducts(products);
+        }
 
-        // Update fields
-        category.setName(categoryNameDto.getName());
-
-        return categoryRepository.save(category);
+        return convertToDefaultDto(categoryRepository.save(category));
     }
 
     public void deleteCategoryById(Long id) {

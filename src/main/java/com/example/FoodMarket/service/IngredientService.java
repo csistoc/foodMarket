@@ -1,6 +1,6 @@
 package com.example.FoodMarket.service;
 
-import com.example.FoodMarket.dto.IngredientCreateDto;
+import com.example.FoodMarket.dto.IngredientCleanDto;
 import com.example.FoodMarket.dto.IngredientDefaultDto;
 import com.example.FoodMarket.dto.IngredientNameDto;
 import com.example.FoodMarket.model.Ingredient;
@@ -50,14 +50,14 @@ public class IngredientService {
                 .collect(Collectors.toList());
     }
 
-    public Ingredient addIngredientFromDto(IngredientCreateDto ingredientCreateDto) {
+    public Ingredient addIngredientFromDto(IngredientCleanDto ingredientCleanDto) {
 
         Ingredient ingredient = new Ingredient();
 
-        ingredient.setName(ingredientCreateDto.getName());
+        ingredient.setName(ingredientCleanDto.getName());
 
         Set<Product> products = new HashSet<>();
-        for (Long productId : ingredientCreateDto.getProductIds()) {
+        for (Long productId : ingredientCleanDto.getProductIds()) {
             Optional<Product> productOpt = productRepository.findById(productId);
             productOpt.ifPresent(products::add);
         }

@@ -35,7 +35,7 @@ public class User {
 
     //@OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
 
-    @ManyToMany(mappedBy = "sellers")
+    @ManyToMany(mappedBy = "users")
     private Set<Seller> sellers;
 
     /*

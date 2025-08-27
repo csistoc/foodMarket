@@ -46,14 +46,14 @@ public class OrderStatusService {
                 .collect(Collectors.toList());
     }
 
-    public OrderStatus addOrderStatusFromDto(OrderStatusCreateDto orderStatusCreateDto) {
+    public OrderStatus addOrderStatusFromDto(OrderStatusCleanDto orderStatusCleanDto) {
 
         OrderStatus orderStatus = new OrderStatus();
 
-        orderStatus.setName(orderStatusCreateDto.getName());
+        orderStatus.setName(orderStatusCleanDto.getName());
 
         Set<Order> orders = new HashSet<>();
-        for (Long orderId : orderStatusCreateDto.getOrderIds()) {
+        for (Long orderId : orderStatusCleanDto.getOrderIds()) {
             Optional<Order> orderOpt = orderRepository.findById(orderId);
             orderOpt.ifPresent(orders::add);
         }

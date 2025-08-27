@@ -46,17 +46,17 @@ public class UserService {
         return userDefaultDto;
     }
 
-    public User addUserFromDto(UserCreateDto userCreateDto) {
+    public User addUserFromDto(UserCleanDto userCleanDto) {
         // Optionally hash the password here
         User user = new User(
-                userCreateDto.getUsername(),
-                userCreateDto.getPassword(),
-                userCreateDto.getEmail(),
-                userCreateDto.getFirstName(),
-                userCreateDto.getLastName(),
-                userCreateDto.getAddress(),
-                userCreateDto.getPhone(),
-                userCreateDto.getDateOfBirth()
+                userCleanDto.getUsername(),
+                userCleanDto.getPassword(),
+                userCleanDto.getEmail(),
+                userCleanDto.getFirstName(),
+                userCleanDto.getLastName(),
+                userCleanDto.getAddress(),
+                userCleanDto.getPhone(),
+                userCleanDto.getDateOfBirth()
         );
         return userRepository.save(user);
     }
@@ -68,141 +68,45 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    public List<User> getAllUsersRaw() {
-        return (List<User>)userRepository.findAll();
-    }
-
     public UserDefaultDto getUserByIdAsDto(Long id) {
         return userRepository.findById(id)
                 .map(this::convertToDefaultDto)
                 .orElse(null);
     }
 
-    public User changeUserPassword(UserPasswordDto userPasswordDto) {
-        // Fetch existing user
-        Optional<User> optionalUser = userRepository.findById(userPasswordDto.getId());
+    public User updateUser(UserDefaultDto userDto) {
+        Optional<User> optionalUser = userRepository.findById(userDto.getId());
+
         if (optionalUser.isEmpty()) {
-            throw new RuntimeException("User not found with ID: " + userPasswordDto.getId());
+            throw new RuntimeException("User not found with id: " + userDto.getId());
         }
 
         User user = optionalUser.get();
 
-        // Update fields
-        user.setPassword(userPasswordDto.getPassword());
+        if (userDto.getPassword() != null)
+            user.setPassword(userDto.getPassword());
 
-        // Save updated user
-        return userRepository.save(user);
-    }
+        if (userDto.getUsername() != null)
+            user.setUsername(userDto.getUsername());
 
-    public User changeUserUsername(UserUsernameDto userUsernameDto) {
-        // Fetch existing user
-        Optional<User> optionalUser = userRepository.findById(userUsernameDto.getId());
-        if (optionalUser.isEmpty()) {
-            throw new RuntimeException("User not found with ID: " + userUsernameDto.getId());
-        }
+        if (userDto.getEmail() != null)
+            user.setEmail(userDto.getEmail());
 
-        User user = optionalUser.get();
+        if (userDto.getPhone() != null)
+            user.setPhone(userDto.getPhone());
 
-        // Update fields
-        user.setPassword(userUsernameDto.getUsername());
+        if (userDto.getAddress() != null)
+            user.setAddress(userDto.getAddress());
 
-        // Save updated user
-        return userRepository.save(user);
-    }
+        if (userDto.getFirstName() != null)
+            user.setFirstName(userDto.getFirstName());
 
-    public User changeUserEmail(UserEmailDto userEmailDto) {
-        // Fetch existing user
-        Optional<User> optionalUser = userRepository.findById(userEmailDto.getId());
-        if (optionalUser.isEmpty()) {
-            throw new RuntimeException("User not found with ID: " + userEmailDto.getId());
-        }
+        if (userDto.getLastName() != null)
+            user.setLastName(userDto.getLastName());
 
-        User user = optionalUser.get();
+        if (userDto.getDateOfBirth() != null)
+            user.setDateOfBirth(userDto.getDateOfBirth());
 
-        // Update fields
-        user.setEmail(userEmailDto.getEmail());
-
-        // Save updated user
-        return userRepository.save(user);
-    }
-
-    public User changeUserFirstName(UserFirstNameDto userFirstNameDto) {
-        // Fetch existing user
-        Optional<User> optionalUser = userRepository.findById(userFirstNameDto.getId());
-        if (optionalUser.isEmpty()) {
-            throw new RuntimeException("User not found with ID: " + userFirstNameDto.getId());
-        }
-
-        User user = optionalUser.get();
-
-        // Update fields
-        user.setFirstName(userFirstNameDto.getFirstName());
-
-        // Save updated user
-        return userRepository.save(user);
-    }
-
-    public User changeUserLastName(UserLastNameDto userLastNameDto) {
-        // Fetch existing user
-        Optional<User> optionalUser = userRepository.findById(userLastNameDto.getId());
-        if (optionalUser.isEmpty()) {
-            throw new RuntimeException("User not found with ID: " + userLastNameDto.getId());
-        }
-
-        User user = optionalUser.get();
-
-        // Update fields
-        user.setLastName(userLastNameDto.getLastName());
-
-        // Save updated user
-        return userRepository.save(user);
-    }
-
-    public User changeUserAddress(UserAddressDto userAddressDto) {
-        // Fetch existing user
-        Optional<User> optionalUser = userRepository.findById(userAddressDto.getId());
-        if (optionalUser.isEmpty()) {
-            throw new RuntimeException("User not found with ID: " + userAddressDto.getId());
-        }
-
-        User user = optionalUser.get();
-
-        // Update fields
-        user.setAddress(userAddressDto.getAddress());
-
-        // Save updated user
-        return userRepository.save(user);
-    }
-
-    public User changeUserPhone(UserPhoneDto userPhoneDto) {
-        // Fetch existing user
-        Optional<User> optionalUser = userRepository.findById(userPhoneDto.getId());
-        if (optionalUser.isEmpty()) {
-            throw new RuntimeException("User not found with ID: " + userPhoneDto.getId());
-        }
-
-        User user = optionalUser.get();
-
-        // Update fields
-        user.setPhone(userPhoneDto.getPhone());
-
-        // Save updated user
-        return userRepository.save(user);
-    }
-
-    public User changeDateOfBirth(UserDateOfBirthDto userDateOfBirthDto) {
-        // Fetch existing user
-        Optional<User> optionalUser = userRepository.findById(userDateOfBirthDto.getId());
-        if (optionalUser.isEmpty()) {
-            throw new RuntimeException("User not found with ID: " + userDateOfBirthDto.getId());
-        }
-
-        User user = optionalUser.get();
-
-        // Update fields
-        user.setDateOfBirth(userDateOfBirthDto.getDateOfBirth());
-
-        // Save updated user
         return userRepository.save(user);
     }
 
