@@ -1,5 +1,6 @@
 package com.example.FoodMarket.controller;
 
+import com.example.FoodMarket.api.ApiResponse;
 import com.example.FoodMarket.dto.SellerUsersDto;
 import com.example.FoodMarket.service.EmployeeService;
 import org.springframework.http.ResponseEntity;
@@ -16,25 +17,25 @@ public class EmployeeController {
         this.employeeService = employeeService;
     }
 
-    @PostMapping("/add")
-    public ResponseEntity<String> addUserToSellers(@RequestBody SellerUsersDto dto) {
-        String result = employeeService.addUserToSeller(dto);
+    @PostMapping("/sellers")
+    public ResponseEntity<String> addUserToSeller(@RequestBody SellerUsersDto dto) {
+        ApiResponse<Void> apiResponse = employeeService.addUserToSeller(dto);
 
-        if (result.startsWith("User added")) {
-            return ResponseEntity.ok(result);
+        if (apiResponse.isSuccess()) {
+            return ResponseEntity.ok(apiResponse.getMessage());
         } else {
-            return ResponseEntity.badRequest().body(result);
+            return ResponseEntity.badRequest().body(apiResponse.getMessage());
         }
     }
 
-    @DeleteMapping("/remove")
+    @DeleteMapping("/sellers")
     public ResponseEntity<String> removeUserFromSeller(@RequestBody SellerUsersDto dto) {
-        String result = employeeService.removeUserFromSeller(dto);
+        ApiResponse<Void> apiResponse = employeeService.addUserToSeller(dto);
 
-        if (result.startsWith("User removed")) {
-            return ResponseEntity.ok(result);
+        if (apiResponse.isSuccess()) {
+            return ResponseEntity.ok(apiResponse.getMessage());
         } else {
-            return ResponseEntity.badRequest().body(result);
+            return ResponseEntity.badRequest().body(apiResponse.getMessage());
         }
     }
 }

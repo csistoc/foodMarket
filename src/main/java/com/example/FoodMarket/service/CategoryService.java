@@ -1,9 +1,11 @@
 package com.example.FoodMarket.service;
 
+import com.example.FoodMarket.api.ApiResponse;
 import com.example.FoodMarket.dto.CategoryCleanDto;
 import com.example.FoodMarket.dto.CategoryDefaultDto;
 import com.example.FoodMarket.model.Category;
 import com.example.FoodMarket.model.Product;
+import com.example.FoodMarket.model.User;
 import com.example.FoodMarket.repository.CategoryRepository;
 import com.example.FoodMarket.repository.ProductRepository;
 import org.springframework.stereotype.Service;
@@ -49,7 +51,7 @@ public class CategoryService {
                 .collect(Collectors.toList());
     }
 
-    public CategoryDefaultDto addCategoryFromDto(CategoryCleanDto dto) {
+    public ApiResponse<CategoryDefaultDto> addCategoryFromDto(CategoryCleanDto dto) {
 
         Category category = new Category();
 
@@ -63,13 +65,18 @@ public class CategoryService {
 
         category.setProducts(products);
 
-        return convertToDefaultDto(categoryRepository.save(category));
+        return new ApiResponse<>(true, "Category added successfully.", convertToDefaultDto(categoryRepository.save(category)));
     }
 
-    public CategoryDefaultDto updateCategory(Long id, CategoryCleanDto dto) {
+    public ApiResponse<CategoryDefaultDto> updateCategory(Long id, CategoryDefaultDto dto) {
         // Find category by ID
-        Category category = categoryRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Category not found with id: " + id));
+        Optional<Category> optionalCategory = categoryRepository.findById(id);
+
+        if (optionalCategory.isEmpty()) {
+            return new ApiResponse<>(false, "Category not found.", dto);
+        }
+
+        Category category = optionalCategory.get();
 
         // Update simple fields
         if (dto.getName() != null) {
@@ -84,14 +91,19 @@ public class CategoryService {
             category.setProducts(products);
         }
 
-        return convertToDefaultDto(categoryRepository.save(category));
+        categoryRepository.save(category);
+
+        return new ApiResponse<>(true, "Category updated successfully.", convertToDefaultDto(categoryRepository.save(category)));
     }
 
-    public void deleteCategoryById(Long id) {
+    public ApiResponse<Void> deleteCategoryById(Long id) {
+
         if (!categoryRepository.existsById(id)) {
-            throw new RuntimeException("Category not found with ID: " + id);
+            return new ApiResponse<>(false, "Category not found with ID: " + id);
         }
 
         categoryRepository.deleteById(id);
+
+        return new ApiResponse<>(true, "Category deleted successfully.");
     }
 }

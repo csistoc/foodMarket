@@ -1,7 +1,9 @@
 package com.example.FoodMarket.controller;
 
+import com.example.FoodMarket.api.ApiResponse;
 import com.example.FoodMarket.dto.CategoryCleanDto;
 import com.example.FoodMarket.dto.CategoryDefaultDto;
+import com.example.FoodMarket.dto.UserDefaultDto;
 import com.example.FoodMarket.model.Category;
 import com.example.FoodMarket.service.CategoryService;
 import org.springframework.http.HttpStatus;
@@ -27,23 +29,36 @@ public class CategoryController {
     }
 
     @PostMapping
-    public ResponseEntity<CategoryDefaultDto> createCategory(@RequestBody CategoryCleanDto dto) {
-        CategoryDefaultDto created = categoryService.addCategoryFromDto(dto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(created);
+    public ResponseEntity<ApiResponse<CategoryDefaultDto>> createCategory(@RequestBody CategoryCleanDto dto) {
+        ApiResponse<CategoryDefaultDto> apiResponse = categoryService.addCategoryFromDto(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CategoryDefaultDto > updateCategory(
+    public ResponseEntity<ApiResponse<CategoryDefaultDto>> updateCategory(
             @PathVariable Long id,
-            @RequestBody CategoryCleanDto dto) {
+            @RequestBody CategoryDefaultDto dto) {
 
-        CategoryDefaultDto updatedCategory = categoryService.updateCategory(id, dto);
-        return ResponseEntity.ok(updatedCategory);
+        ApiResponse<CategoryDefaultDto> apiResponse = categoryService.updateCategory(id, dto);
+
+        if (apiResponse.isSuccess()) {
+            return ResponseEntity.ok(apiResponse);
+        }
+        else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(apiResponse);
+        }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteCategory(@PathVariable Long id) {
-        categoryService.deleteCategoryById(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<?> deleteCategory(@PathVariable Long id) {
+        ApiResponse<Void> apiResponse = categoryService.deleteCategoryById(id);
+
+        if (apiResponse.isSuccess()) {
+            return ResponseEntity.noContent().build(); // 204
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(apiResponse);
+        }
     }
 }

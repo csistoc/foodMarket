@@ -1,5 +1,6 @@
 package com.example.FoodMarket.service;
 
+import com.example.FoodMarket.api.ApiResponse;
 import com.example.FoodMarket.dto.*;
 import com.example.FoodMarket.model.*;
 import com.example.FoodMarket.repository.UserRepository;
@@ -46,7 +47,7 @@ public class UserService {
         return userDefaultDto;
     }
 
-    public User addUserFromDto(UserCleanDto userCleanDto) {
+    public ApiResponse<UserDefaultDto> addUserFromDto(UserCleanDto userCleanDto) {
         // Optionally hash the password here
         User user = new User(
                 userCleanDto.getUsername(),
@@ -58,7 +59,12 @@ public class UserService {
                 userCleanDto.getPhone(),
                 userCleanDto.getDateOfBirth()
         );
-        return userRepository.save(user);
+
+        userRepository.save(user);
+
+        UserDefaultDto userDefaultDto = convertToDefaultDto(user);
+
+        return new ApiResponse<>(true, "User created successfully.", userDefaultDto);
     }
 
     public List<UserDefaultDto> getAllUsersAsDefaultDto() {
@@ -74,11 +80,11 @@ public class UserService {
                 .orElse(null);
     }
 
-    public User updateUser(UserDefaultDto userDto) {
-        Optional<User> optionalUser = userRepository.findById(userDto.getId());
+    public ApiResponse<UserDefaultDto> updateUser(Long id, UserDefaultDto userDto) {
+        Optional<User> optionalUser = userRepository.findById(id);
 
         if (optionalUser.isEmpty()) {
-            throw new RuntimeException("User not found with id: " + userDto.getId());
+            return new ApiResponse<>(false, "User not found with id " + id);
         }
 
         User user = optionalUser.get();
@@ -107,7 +113,11 @@ public class UserService {
         if (userDto.getDateOfBirth() != null)
             user.setDateOfBirth(userDto.getDateOfBirth());
 
-        return userRepository.save(user);
+        userRepository.save(user);
+
+        UserDefaultDto outputUserDto = convertToDefaultDto(user);
+
+        return new ApiResponse<>(true, "User updated successfully.", outputUserDto);
     }
 
     /*
@@ -126,11 +136,13 @@ public class UserService {
     }
      */
 
-    public void deleteUserById(Long id) {
+    public ApiResponse<Void> deleteUserById(Long id) {
         if (!userRepository.existsById(id)) {
-            throw new RuntimeException("User not found with ID: " + id);
+            return new ApiResponse<>(false, "User not found with ID: " + id);
         }
 
         userRepository.deleteById(id);
+
+        return new ApiResponse<>(true, "User deleted successfully.");
     }
 }

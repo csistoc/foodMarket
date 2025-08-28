@@ -1,5 +1,6 @@
 package com.example.FoodMarket.service;
 
+import com.example.FoodMarket.api.ApiResponse;
 import com.example.FoodMarket.dto.SellerUsersDto;
 import com.example.FoodMarket.model.*;
 import com.example.FoodMarket.repository.SellerRepository;
@@ -47,12 +48,12 @@ public class EmployeeService {
 
      */
 
-    public String addUserToSeller(SellerUsersDto dto) {
+    public ApiResponse<Void> addUserToSeller(SellerUsersDto dto) {
         Optional<User> userOpt = userRepository.findById(dto.getUserId());
         Optional<Seller> sellerOpt = sellerRepository.findById(dto.getSellerId());
 
         if (userOpt.isEmpty() || sellerOpt.isEmpty()) {
-            return "Seller or User not found.";
+            return new ApiResponse<>(false, "Seller or User not found.");
         }
 
         User user = userOpt.get();
@@ -60,38 +61,42 @@ public class EmployeeService {
 
         // Check if already related
         if (seller.getUsers().contains(user)) {
-            return "This user is already in the sellers list.";
+            return new ApiResponse<>(false, "This user is already in the sellers list.");
         }
 
         // Add relationship
         seller.getUsers().add(user);
         user.getSellers().add(seller);
 
-        sellerRepository.save(seller); // Cascade saves join table entry
-        return "User added to sellers successfully.";
+        sellerRepository.save(seller);
+        userRepository.save(user);
+
+        return new ApiResponse<>(true, "User added to sellers successfully.");
     }
 
-    public String removeUserFromSeller(SellerUsersDto dto) {
+    public ApiResponse<Void> removeUserFromSeller(SellerUsersDto dto) {
         Optional<User> userOpt = userRepository.findById(dto.getUserId());
         Optional<Seller> sellerOpt = sellerRepository.findById(dto.getSellerId());
 
         if (userOpt.isEmpty() || sellerOpt.isEmpty()) {
-            return "Seller or User not found.";
+            return new ApiResponse<>(false,"Seller or User not found.");
         }
 
         User user = userOpt.get();
         Seller seller = sellerOpt.get();
 
-        // Check if already related
-        if (seller.getUsers().contains(user)) {
-            return "This user is already in the sellers list.";
+        // Check if user is associated
+        if (!seller.getUsers().contains(user)) {
+            return new ApiResponse<>(false,"This user is not in the sellers list.");
         }
 
         // Remove relationship on both sides
         seller.getUsers().remove(user);
         user.getSellers().remove(seller);
 
-        sellerRepository.save(seller); // Cascade removes join table entry
-        return "User removed from sellers successfully.";
+        sellerRepository.save(seller);
+        userRepository.save(user);
+
+        return new ApiResponse<>(true,"User removed from sellers successfully.");
     }
 }
