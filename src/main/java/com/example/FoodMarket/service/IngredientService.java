@@ -1,8 +1,8 @@
 package com.example.FoodMarket.service;
 
-import com.example.FoodMarket.dto.IngredientCleanDto;
+import com.example.FoodMarket.api.ApiResponse;
+import com.example.FoodMarket.dto.IngredientCreateDto;
 import com.example.FoodMarket.dto.IngredientDefaultDto;
-import com.example.FoodMarket.dto.IngredientNameDto;
 import com.example.FoodMarket.model.Ingredient;
 import com.example.FoodMarket.model.Product;
 import com.example.FoodMarket.repository.IngredientRepository;
@@ -50,14 +50,14 @@ public class IngredientService {
                 .collect(Collectors.toList());
     }
 
-    public Ingredient addIngredientFromDto(IngredientCleanDto ingredientCleanDto) {
+    public Ingredient addIngredientFromDto(IngredientCreateDto ingredientCreateDto) {
 
         Ingredient ingredient = new Ingredient();
 
-        ingredient.setName(ingredientCleanDto.getName());
+        ingredient.setName(ingredientCreateDto.getName());
 
         Set<Product> products = new HashSet<>();
-        for (Long productId : ingredientCleanDto.getProductIds()) {
+        for (Long productId : ingredientCreateDto.getProductIds()) {
             Optional<Product> productOpt = productRepository.findById(productId);
             productOpt.ifPresent(products::add);
         }
@@ -67,26 +67,41 @@ public class IngredientService {
         return ingredientRepository.save(ingredient);
     }
 
-    public Ingredient changeIngredientName(IngredientNameDto ingredientNameDto) {
-        // Fetch existing
-        Optional<Ingredient> optionalIngredient = ingredientRepository.findById(ingredientNameDto.getId());
+    public ApiResponse<IngredientDefaultDto> updateIngredient(Long id, IngredientDefaultDto dto) {
+        // Find category by ID
+        Optional<Ingredient> optionalIngredient = ingredientRepository.findById(id);
+
         if (optionalIngredient.isEmpty()) {
-            throw new RuntimeException("User not found with ID: " + ingredientNameDto.getId());
+            return new ApiResponse<>(false, "Ingredient not found.", dto);
         }
 
         Ingredient ingredient = optionalIngredient.get();
 
-        // Update fields
-        ingredient.setName(ingredientNameDto.getName());
+        // Update simple fields
+        if (dto.getName() != null) {
+            ingredient.setName(dto.getName());
+        }
 
-        return ingredientRepository.save(ingredient);
+        // Update products if provided
+        if (dto.getProductIds() != null && !dto.getProductIds().isEmpty()) {
+            Iterable<Product> foundProducts = productRepository.findAllById(dto.getProductIds());
+            Set<Product> products = new HashSet<>();
+            foundProducts.forEach(products::add);
+            ingredient.setProducts(products);
+        }
+
+        ingredientRepository.save(ingredient);
+
+        return new ApiResponse<>(true, "Category updated successfully.", convertToDefaultDto(ingredient));
     }
 
-    public void deleteIngredientById(Long id) {
+    public ApiResponse<Void> deleteIngredientById(Long id) {
         if (!ingredientRepository.existsById(id)) {
-            throw new RuntimeException("User not found with ID: " + id);
+            return new ApiResponse<>(false, "Category not found with ID: " + id);
         }
 
         ingredientRepository.deleteById(id);
+
+        return new ApiResponse<>(true, "Category deleted successfully.");
     }
 }

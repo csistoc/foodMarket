@@ -1,8 +1,9 @@
 package com.example.FoodMarket.dto;
 
 import java.time.LocalDate;
+import java.util.Set;
 
-public class UserCleanDto {
+public class UserCreateDto {
 
     private String username;
 
@@ -20,9 +21,13 @@ public class UserCleanDto {
 
     private LocalDate dateOfBirth;
 
-    public UserCleanDto() {}
+    private Set<Long> orderIds;
 
-    public UserCleanDto(String username, String password, String email, String firstName, String lastName, String address, String phone, LocalDate dateOfBirth) {
+    private Set<Long> sellerIds;
+
+    public UserCreateDto() {}
+
+    public UserCreateDto(String username, String password, String email, String firstName, String lastName, String address, String phone, LocalDate dateOfBirth, Set<Long> orderIds, Set<Long> sellerIds) {
         this.username = username;
         this.password = password;
         this.email = email;
@@ -31,6 +36,8 @@ public class UserCleanDto {
         this.address = address;
         this.phone = phone;
         this.dateOfBirth = dateOfBirth;
+        this.orderIds = orderIds;
+        this.sellerIds = sellerIds;
     }
 
     public String getUsername() {
@@ -95,5 +102,21 @@ public class UserCleanDto {
 
     public void setDateOfBirth(LocalDate dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
+    }
+
+    public Set<Long> getOrderIds() {
+        return orderIds;
+    }
+
+    public void setOrderIds(Set<Long> orderIds) {
+        this.orderIds = orderIds;
+    }
+
+    public Set<Long> getSellerIds() {
+        return sellerIds;
+    }
+
+    public void setSellerIds(Set<Long> sellerIds) {
+        this.sellerIds = sellerIds;
     }
 }

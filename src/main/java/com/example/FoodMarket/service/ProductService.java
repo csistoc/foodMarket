@@ -1,6 +1,6 @@
 package com.example.FoodMarket.service;
 
-import com.example.FoodMarket.dto.ProductCleanDto;
+import com.example.FoodMarket.dto.ProductCreateDto;
 import com.example.FoodMarket.dto.ProductDefaultDto;
 import com.example.FoodMarket.dto.ProductNameDto;
 import com.example.FoodMarket.model.*;
@@ -71,35 +71,35 @@ public class ProductService {
                 .collect(Collectors.toList());
     }
 
-    public Product addProductFromDto(ProductCleanDto productCleanDto) {
+    public Product addProductFromDto(ProductCreateDto productCreateDto) {
 
         Product product = new Product();
 
-        product.setName(productCleanDto.getName());
+        product.setName(productCreateDto.getName());
 
         Set<Category> categories = new HashSet<>();
-        for (Long categoryId : productCleanDto.getCategoryIds()) {
+        for (Long categoryId : productCreateDto.getCategoryIds()) {
             Optional<Category> categoryOpt = categoryRepository.findById(categoryId);
             categoryOpt.ifPresent(categories::add);
         }
         product.setCategories(categories);
 
         Set<Ingredient> ingredients = new HashSet<>();
-        for (Long ingredientId : productCleanDto.getIngredientIds()) {
+        for (Long ingredientId : productCreateDto.getIngredientIds()) {
             Optional<Ingredient> ingredientOpt = ingredientRepository.findById(ingredientId);
             ingredientOpt.ifPresent(ingredients::add);
         }
         product.setIngredients(ingredients);
 
         Set<Seller> sellers = new HashSet<>();
-        for (Long sellerId : productCleanDto.getSellerIds()) {
+        for (Long sellerId : productCreateDto.getSellerIds()) {
             Optional<Seller> sellerOpt = sellerRepository.findById(sellerId);
             sellerOpt.ifPresent(sellers::add);
         }
         product.setSellers(sellers);
 
         Set<Order> orders = new HashSet<>();
-        for (Long orderId : productCleanDto.getOrderIds()) {
+        for (Long orderId : productCreateDto.getOrderIds()) {
             Optional<Order> orderOpt = orderRepository.findById(orderId);
             orderOpt.ifPresent(orders::add);
         }

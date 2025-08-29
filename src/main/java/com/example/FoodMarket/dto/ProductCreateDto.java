@@ -2,7 +2,7 @@ package com.example.FoodMarket.dto;
 
 import java.util.Set;
 
-public class ProductCleanDto {
+public class ProductCreateDto {
 
     private String name;
 
@@ -14,10 +14,10 @@ public class ProductCleanDto {
 
     private Set<Long> orderIds;
 
-    public ProductCleanDto() {
+    public ProductCreateDto() {
     }
 
-    public ProductCleanDto(String name, Set<Long> categoryIds, Set<Long> ingredientIds, Set<Long> sellerIds, Set<Long> orderIds) {
+    public ProductCreateDto(String name, Set<Long> categoryIds, Set<Long> ingredientIds, Set<Long> sellerIds, Set<Long> orderIds) {
         this.name = name;
         this.categoryIds = categoryIds;
         this.ingredientIds = ingredientIds;

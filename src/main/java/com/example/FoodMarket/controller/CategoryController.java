@@ -1,10 +1,8 @@
 package com.example.FoodMarket.controller;
 
 import com.example.FoodMarket.api.ApiResponse;
-import com.example.FoodMarket.dto.CategoryCleanDto;
+import com.example.FoodMarket.dto.CategoryCreateDto;
 import com.example.FoodMarket.dto.CategoryDefaultDto;
-import com.example.FoodMarket.dto.UserDefaultDto;
-import com.example.FoodMarket.model.Category;
 import com.example.FoodMarket.service.CategoryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +27,7 @@ public class CategoryController {
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse<CategoryDefaultDto>> createCategory(@RequestBody CategoryCleanDto dto) {
+    public ResponseEntity<ApiResponse<CategoryDefaultDto>> createCategory(@RequestBody CategoryCreateDto dto) {
         ApiResponse<CategoryDefaultDto> apiResponse = categoryService.addCategoryFromDto(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse);
     }
@@ -56,7 +54,8 @@ public class CategoryController {
 
         if (apiResponse.isSuccess()) {
             return ResponseEntity.noContent().build(); // 204
-        } else {
+        }
+        else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(apiResponse);
         }

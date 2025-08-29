@@ -1,10 +1,11 @@
 package com.example.FoodMarket.controller;
 
-import com.example.FoodMarket.dto.IngredientCleanDto;
+import com.example.FoodMarket.api.ApiResponse;
+import com.example.FoodMarket.dto.IngredientCreateDto;
 import com.example.FoodMarket.dto.IngredientDefaultDto;
-import com.example.FoodMarket.dto.IngredientNameDto;
 import com.example.FoodMarket.model.Ingredient;
 import com.example.FoodMarket.service.IngredientService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,30 +27,37 @@ public class IngredientController {
         return ingredientService.getAllIngredientsAsDefaultDto();
     }
 
-    @PostMapping("/add")
-    public Ingredient createCategory(@RequestBody IngredientCleanDto ingredientCleanDto) {
-        return ingredientService.addIngredientFromDto(ingredientCleanDto);
+    @PostMapping
+    public Ingredient createCategory(@RequestBody IngredientCreateDto ingredientCreateDto) {
+        return ingredientService.addIngredientFromDto(ingredientCreateDto);
     }
 
-    @PutMapping("/changeName/{id}")
-    public ResponseEntity<IngredientNameDto> updateName(
+    @PutMapping("/{id}")
+    public ResponseEntity<ApiResponse<IngredientDefaultDto>> updateIngredient(
             @PathVariable Long id,
-            @RequestBody IngredientNameDto ingredientNameDto) {
+            @RequestBody IngredientDefaultDto dto) {
 
-        ingredientNameDto.setId(id);  // ensure path ID and DTO ID are in sync
-        Ingredient updatedIngredient = ingredientService.changeIngredientName(ingredientNameDto);
+        ApiResponse<IngredientDefaultDto> apiResponse = ingredientService.updateIngredient(id, dto);
 
-        // Map entity to DTO (you can use a mapper method/service here)
-        IngredientNameDto responseDto = new IngredientNameDto();
-
-        responseDto.setName(updatedIngredient.getName());
-
-        return ResponseEntity.ok(responseDto);
+        if (apiResponse.isSuccess()) {
+            return ResponseEntity.ok(apiResponse);
+        }
+        else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(apiResponse);
+        }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteIngredient(@PathVariable Long id) {
-        ingredientService.deleteIngredientById(id);
-        return ResponseEntity.ok("Ingredient with ID " + id + " deleted successfully.");
+    public ResponseEntity<?> deleteIngredient(@PathVariable Long id) {
+        ApiResponse<Void> apiResponse = ingredientService.deleteIngredientById(id);
+
+        if (apiResponse.isSuccess()) {
+            return ResponseEntity.noContent().build(); // 204
+        }
+        else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(apiResponse);
+        }
     }
 }

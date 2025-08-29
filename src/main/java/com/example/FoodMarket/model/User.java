@@ -48,6 +48,18 @@ public class User {
 
     public User() { }
 
+    public User(Long id, String username, String password, String email, String firstName, String lastName, String address, String phone, LocalDate dateOfBirth) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.address = address;
+        this.phone = phone;
+        this.dateOfBirth = dateOfBirth;
+    }
+
     public User(String username, String password, String email, String firstName, String lastName, String address, String phone, LocalDate dateOfBirth) {
         this.username = username;
         this.password = password;

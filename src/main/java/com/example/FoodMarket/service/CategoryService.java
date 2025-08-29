@@ -1,11 +1,10 @@
 package com.example.FoodMarket.service;
 
 import com.example.FoodMarket.api.ApiResponse;
-import com.example.FoodMarket.dto.CategoryCleanDto;
+import com.example.FoodMarket.dto.CategoryCreateDto;
 import com.example.FoodMarket.dto.CategoryDefaultDto;
 import com.example.FoodMarket.model.Category;
 import com.example.FoodMarket.model.Product;
-import com.example.FoodMarket.model.User;
 import com.example.FoodMarket.repository.CategoryRepository;
 import com.example.FoodMarket.repository.ProductRepository;
 import org.springframework.stereotype.Service;
@@ -51,7 +50,7 @@ public class CategoryService {
                 .collect(Collectors.toList());
     }
 
-    public ApiResponse<CategoryDefaultDto> addCategoryFromDto(CategoryCleanDto dto) {
+    public ApiResponse<CategoryDefaultDto> addCategoryFromDto(CategoryCreateDto dto) {
 
         Category category = new Category();
 
@@ -93,11 +92,10 @@ public class CategoryService {
 
         categoryRepository.save(category);
 
-        return new ApiResponse<>(true, "Category updated successfully.", convertToDefaultDto(categoryRepository.save(category)));
+        return new ApiResponse<>(true, "Category updated successfully.", convertToDefaultDto(category));
     }
 
     public ApiResponse<Void> deleteCategoryById(Long id) {
-
         if (!categoryRepository.existsById(id)) {
             return new ApiResponse<>(false, "Category not found with ID: " + id);
         }

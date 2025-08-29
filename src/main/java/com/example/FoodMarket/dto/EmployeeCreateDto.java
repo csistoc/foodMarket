@@ -3,16 +3,16 @@ package com.example.FoodMarket.dto;
 import com.example.FoodMarket.model.Seller;
 import com.example.FoodMarket.model.User;
 
-public class EmployeeCleanDto {
+public class EmployeeCreateDto {
 
     private User user;
 
     private Seller seller;
 
-    public EmployeeCleanDto() {
+    public EmployeeCreateDto() {
     }
 
-    public EmployeeCleanDto(User user, Seller seller) {
+    public EmployeeCreateDto(User user, Seller seller) {
         this.user = user;
         this.seller = seller;
     }

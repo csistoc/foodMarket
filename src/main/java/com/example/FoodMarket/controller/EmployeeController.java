@@ -34,7 +34,8 @@ public class EmployeeController {
 
         if (apiResponse.isSuccess()) {
             return ResponseEntity.ok(apiResponse.getMessage());
-        } else {
+        }
+        else {
             return ResponseEntity.badRequest().body(apiResponse.getMessage());
         }
     }

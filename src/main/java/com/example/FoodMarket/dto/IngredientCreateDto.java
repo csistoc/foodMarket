@@ -2,16 +2,16 @@ package com.example.FoodMarket.dto;
 
 import java.util.Set;
 
-public class CategoryCleanDto {
+public class IngredientCreateDto {
 
     private String name;
 
     private Set<Long> productIds;
 
-    public CategoryCleanDto() {
+    public IngredientCreateDto() {
     }
 
-    public CategoryCleanDto(String name, Set<Long> productIds) {
+    public IngredientCreateDto(String name, Set<Long> productIds) {
 
         this.name = name;
         this.productIds = productIds;

@@ -25,8 +25,8 @@ public class OrderStatusController {
     }
 
     @PostMapping("/add")
-    public OrderStatus createOrderStatus(@RequestBody OrderStatusCleanDto orderStatusCleanDto) {
-        return orderStatusService.addOrderStatusFromDto(orderStatusCleanDto);
+    public OrderStatus createOrderStatus(@RequestBody OrderStatusCreateDto orderStatusCreateDto) {
+        return orderStatusService.addOrderStatusFromDto(orderStatusCreateDto);
     }
 
     @PutMapping("/changeName/{id}")
