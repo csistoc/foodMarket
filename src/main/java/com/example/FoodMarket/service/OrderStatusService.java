@@ -1,6 +1,8 @@
 package com.example.FoodMarket.service;
 
+import com.example.FoodMarket.api.ApiResponse;
 import com.example.FoodMarket.dto.*;
+import com.example.FoodMarket.mapper.OrderStatusMapper;
 import com.example.FoodMarket.model.*;
 import com.example.FoodMarket.repository.OrderRepository;
 import com.example.FoodMarket.repository.OrderStatusRepository;
@@ -16,37 +18,24 @@ import java.util.stream.Collectors;
 public class OrderStatusService {
 
     private final OrderStatusRepository orderStatusRepository;
-
     private final OrderRepository orderRepository;
 
-    public OrderStatusService(OrderStatusRepository orderStatusRepository, OrderRepository orderRepository) {
+    private final OrderStatusMapper orderStatusMapper;
+
+    public OrderStatusService(OrderStatusRepository orderStatusRepository, OrderRepository orderRepository, OrderStatusMapper orderStatusMapper) {
         this.orderStatusRepository = orderStatusRepository;
         this.orderRepository = orderRepository;
-    }
-
-    public OrderStatusDefaultDto convertToDefaultDto(OrderStatus orderStatus) {
-
-        OrderStatusDefaultDto orderStatusDefaultDto = new OrderStatusDefaultDto();
-
-        orderStatusDefaultDto.setId(orderStatus.getId());
-        orderStatusDefaultDto.setName(orderStatus.getName());
-
-        Set<Long> orderIds = new HashSet<>();
-        for(Order i : orderStatus.getOrders())
-            orderIds.add(i.getId());
-        orderStatusDefaultDto.setOrderIds(orderIds);
-
-        return orderStatusDefaultDto;
+        this.orderStatusMapper = orderStatusMapper;
     }
 
     public List<OrderStatusDefaultDto> getAllOrderStatusesAsDefaultDto() {
-        return ((List<OrderStatus>)orderStatusRepository.findAll())
+        return orderStatusRepository.findAll()
                 .stream()
-                .map(this::convertToDefaultDto)
+                .map(orderStatusMapper::convertToDefaultDto)
                 .collect(Collectors.toList());
     }
 
-    public OrderStatus addOrderStatusFromDto(OrderStatusCreateDto orderStatusCreateDto) {
+    public ApiResponse<OrderStatusDefaultDto> addOrderStatusFromDto(OrderStatusCreateDto orderStatusCreateDto) {
 
         OrderStatus orderStatus = new OrderStatus();
 
@@ -59,81 +48,90 @@ public class OrderStatusService {
         }
         orderStatus.setOrders(orders);
 
-        return orderStatusRepository.save(orderStatus);
+        orderStatusRepository.save(orderStatus);
+
+        return new ApiResponse<>(true, "Order status added successfully.", orderStatusMapper.convertToDefaultDto(orderStatus));
     }
 
-    public OrderStatus changeOrderStatusName(OrderStatusNameDto orderStatusNameDto) {
-        // Fetch existing
-        Optional<OrderStatus> optionalOrderStatus = orderStatusRepository.findById(orderStatusNameDto.getId());
+    public ApiResponse<OrderStatusDefaultDto> updateOrderStatus(Long id, OrderStatusDefaultDto dto) {
+        // Find category by ID
+        Optional<OrderStatus> optionalOrderStatus = orderStatusRepository.findById(id);
+
         if (optionalOrderStatus.isEmpty()) {
-            throw new RuntimeException("Order status not found with ID: " + orderStatusNameDto.getId());
+            return new ApiResponse<>(false, "Order status not found.", dto);
         }
 
         OrderStatus orderStatus = optionalOrderStatus.get();
 
-        // Update fields
-        orderStatus.setName(orderStatusNameDto.getName());
+        // Update simple fields
+        if (dto.getName() != null) {
+            orderStatus.setName(dto.getName());
+        }
 
-        return orderStatusRepository.save(orderStatus);
+        // Update products if provided
+        if (dto.getOrderIds() != null && !dto.getOrderIds().isEmpty()) {
+            Iterable<Order> foundOrders = orderRepository.findAllById(dto.getOrderIds());
+            Set<Order> orders = new HashSet<>();
+            foundOrders.forEach(orders::add);
+            orderStatus.setOrders(orders);
+        }
+
+        orderStatusRepository.save(orderStatus);
+
+        return new ApiResponse<>(true, "Order status updated successfully.", orderStatusMapper.convertToDefaultDto(orderStatus));
     }
 
-    public String addOrderToOrderStatus(OrderStatusOrderListDto orderStatusOrderListDto) {
+    public ApiResponse<OrderStatusDefaultDto> addOrderToOrderStatus(Long id, OrderStatusAddRemoveOrderDto dto) {
         // Fetch existing
-        Optional<OrderStatus> optionalOrderStatus = orderStatusRepository.findById(orderStatusOrderListDto.getId());
+        Optional<OrderStatus> optionalOrderStatus = orderStatusRepository.findById(id);
         if (optionalOrderStatus.isEmpty()) {
-            return "Order status not found with ID: " + orderStatusOrderListDto.getId();
+            return new ApiResponse<>(false, "Order status not found with ID: " + id);
         }
 
         OrderStatus orderStatus = optionalOrderStatus.get();
 
         Set<Order> orders = new HashSet<>();
-        for (Long orderId : orderStatusOrderListDto.getOrderIds()) {
+        for (Long orderId : dto.getOrderIds()) {
             Optional<Order> orderOpt = orderRepository.findById(orderId);
             orderOpt.ifPresent(orders::add);
         }
         orderStatus.setOrders(orders);
 
-        /*
-
-            Add order status to order
-
-         */
-
         orderStatusRepository.save(orderStatus);
 
-        return "Order added to order status successfully.";
+        return new ApiResponse<>(true, "Order added to order status successfully.",
+                orderStatusMapper.convertToDefaultDto(orderStatus));
     }
 
-    public OrderStatus removeOrderFromOrderStatus(OrderStatusOrderListDto orderStatusOrderListDto) {
+    public ApiResponse<OrderStatusDefaultDto> removeOrderFromOrderStatus(Long id, OrderStatusAddRemoveOrderDto dto) {
         // Fetch existing
-        Optional<OrderStatus> optionalOrderStatus = orderStatusRepository.findById(orderStatusOrderListDto.getId());
+        Optional<OrderStatus> optionalOrderStatus = orderStatusRepository.findById(id);
         if (optionalOrderStatus.isEmpty()) {
-            throw new RuntimeException("Order status not found with ID: " + orderStatusOrderListDto.getId());
+            return new ApiResponse<>(false, "Order status not found with ID: " + id);
         }
 
         OrderStatus orderStatus = optionalOrderStatus.get();
 
         Set<Order> orders = new HashSet<>();
-        for (Long orderId : orderStatusOrderListDto.getOrderIds()) {
+        for (Long orderId : dto.getOrderIds()) {
             Optional<Order> orderOpt = orderRepository.findById(orderId);
             orderOpt.ifPresent(orders::remove);
         }
         orderStatus.setOrders(orders);
 
-        /*
+        orderStatusRepository.save(orderStatus);
 
-            Remove order status from order
-
-         */
-
-        return orderStatusRepository.save(orderStatus);
+        return new ApiResponse<>(true, "Order removed from order status successfully.",
+                orderStatusMapper.convertToDefaultDto(orderStatus));
     }
 
-    public void deleteOrderStatusById(Long id) {
+    public ApiResponse<Void> deleteOrderStatusById(Long id) {
         if (!orderStatusRepository.existsById(id)) {
-            throw new RuntimeException("User not found with ID: " + id);
+            return new ApiResponse<>(false, "Order status not found with ID: " + id);
         }
 
         orderStatusRepository.deleteById(id);
+
+        return new ApiResponse<>(true, "Order status deleted successfully.");
     }
 }

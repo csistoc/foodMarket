@@ -3,6 +3,7 @@ package com.example.FoodMarket.service;
 import com.example.FoodMarket.api.ApiResponse;
 import com.example.FoodMarket.dto.IngredientCreateDto;
 import com.example.FoodMarket.dto.IngredientDefaultDto;
+import com.example.FoodMarket.mapper.IngredientMapper;
 import com.example.FoodMarket.model.Ingredient;
 import com.example.FoodMarket.model.Product;
 import com.example.FoodMarket.repository.IngredientRepository;
@@ -19,38 +20,24 @@ import java.util.stream.Collectors;
 public class IngredientService {
 
     private final IngredientRepository ingredientRepository;
-
     private final ProductRepository productRepository;
 
-    public IngredientService(IngredientRepository ingredientRepository, ProductRepository productRepository) {
+    private final IngredientMapper ingredientMapper;
+
+    public IngredientService(IngredientRepository ingredientRepository, ProductRepository productRepository, IngredientMapper ingredientMapper) {
         this.ingredientRepository = ingredientRepository;
         this.productRepository = productRepository;
-    }
-
-    public IngredientDefaultDto convertToDefaultDto(Ingredient ingredient) {
-
-        IngredientDefaultDto ingredientDefaultDto = new IngredientDefaultDto();
-
-        ingredientDefaultDto.setId(ingredient.getId());
-        ingredientDefaultDto.setName(ingredient.getName());
-
-        Set<Long> productIds = new HashSet<>();
-        for(Product i : ingredient.getProducts())
-            productIds.add(i.getId());
-
-        ingredientDefaultDto.setProductIds(productIds);
-
-        return ingredientDefaultDto;
+        this.ingredientMapper = ingredientMapper;
     }
 
     public List<IngredientDefaultDto> getAllIngredientsAsDefaultDto() {
-        return ((List<Ingredient>) ingredientRepository.findAll())
+        return ingredientRepository.findAll()
                 .stream()
-                .map(this::convertToDefaultDto)
+                .map(ingredientMapper::convertToDefaultDto)
                 .collect(Collectors.toList());
     }
 
-    public Ingredient addIngredientFromDto(IngredientCreateDto ingredientCreateDto) {
+    public ApiResponse<IngredientDefaultDto> addIngredientFromDto(IngredientCreateDto ingredientCreateDto) {
 
         Ingredient ingredient = new Ingredient();
 
@@ -64,7 +51,9 @@ public class IngredientService {
 
         ingredient.setProducts(products);
 
-        return ingredientRepository.save(ingredient);
+        ingredientRepository.save(ingredient);
+
+        return new ApiResponse<>(true, "Ingredient added successfully.", ingredientMapper.convertToDefaultDto(ingredient));
     }
 
     public ApiResponse<IngredientDefaultDto> updateIngredient(Long id, IngredientDefaultDto dto) {
@@ -92,7 +81,7 @@ public class IngredientService {
 
         ingredientRepository.save(ingredient);
 
-        return new ApiResponse<>(true, "Category updated successfully.", convertToDefaultDto(ingredient));
+        return new ApiResponse<>(true, "Ingredient updated successfully.", ingredientMapper.convertToDefaultDto(ingredient));
     }
 
     public ApiResponse<Void> deleteIngredientById(Long id) {

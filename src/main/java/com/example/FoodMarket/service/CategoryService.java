@@ -3,6 +3,7 @@ package com.example.FoodMarket.service;
 import com.example.FoodMarket.api.ApiResponse;
 import com.example.FoodMarket.dto.CategoryCreateDto;
 import com.example.FoodMarket.dto.CategoryDefaultDto;
+import com.example.FoodMarket.mapper.CategoryMapper;
 import com.example.FoodMarket.model.Category;
 import com.example.FoodMarket.model.Product;
 import com.example.FoodMarket.repository.CategoryRepository;
@@ -19,34 +20,20 @@ import java.util.stream.Collectors;
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
-
     private final ProductRepository productRepository;
 
-    public CategoryService(CategoryRepository categoryRepository, ProductRepository productRepository) {
+    private final CategoryMapper categoryMapper;
+
+    public CategoryService(CategoryRepository categoryRepository, ProductRepository productRepository, CategoryMapper categoryMapper) {
         this.categoryRepository = categoryRepository;
         this.productRepository = productRepository;
-    }
-
-    public CategoryDefaultDto convertToDefaultDto(Category category) {
-
-        CategoryDefaultDto categoryDefaultDto = new CategoryDefaultDto();
-
-        categoryDefaultDto.setId(category.getId());
-        categoryDefaultDto.setName(category.getName());
-
-        Set<Long> productIds = new HashSet<>();
-        for(Product i : category.getProducts())
-            productIds.add(i.getId());
-
-        categoryDefaultDto.setProductIds(productIds);
-
-        return categoryDefaultDto;
+        this.categoryMapper = categoryMapper;
     }
 
     public List<CategoryDefaultDto> getAllCategoriesAsDefaultDto() {
-        return ((List<Category>)categoryRepository.findAll())
+        return categoryRepository.findAll()
                 .stream()
-                .map(this::convertToDefaultDto)
+                .map(categoryMapper::convertToDefaultDto)
                 .collect(Collectors.toList());
     }
 
@@ -64,7 +51,9 @@ public class CategoryService {
 
         category.setProducts(products);
 
-        return new ApiResponse<>(true, "Category added successfully.", convertToDefaultDto(categoryRepository.save(category)));
+        categoryRepository.save(category);
+
+        return new ApiResponse<>(true, "Category added successfully.", categoryMapper.convertToDefaultDto(category));
     }
 
     public ApiResponse<CategoryDefaultDto> updateCategory(Long id, CategoryDefaultDto dto) {
@@ -92,7 +81,7 @@ public class CategoryService {
 
         categoryRepository.save(category);
 
-        return new ApiResponse<>(true, "Category updated successfully.", convertToDefaultDto(category));
+        return new ApiResponse<>(true, "Category updated successfully.", categoryMapper.convertToDefaultDto(category));
     }
 
     public ApiResponse<Void> deleteCategoryById(Long id) {

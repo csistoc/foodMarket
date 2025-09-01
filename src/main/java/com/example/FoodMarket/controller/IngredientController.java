@@ -28,8 +28,10 @@ public class IngredientController {
     }
 
     @PostMapping
-    public Ingredient createCategory(@RequestBody IngredientCreateDto ingredientCreateDto) {
-        return ingredientService.addIngredientFromDto(ingredientCreateDto);
+    public ResponseEntity<ApiResponse<IngredientDefaultDto>> createCategory(
+            @RequestBody IngredientCreateDto ingredientCreateDto) {
+        ApiResponse<IngredientDefaultDto> apiResponse = ingredientService.addIngredientFromDto(ingredientCreateDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse);
     }
 
     @PutMapping("/{id}")

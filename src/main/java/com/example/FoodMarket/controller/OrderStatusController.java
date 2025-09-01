@@ -1,8 +1,9 @@
 package com.example.FoodMarket.controller;
 
+import com.example.FoodMarket.api.ApiResponse;
 import com.example.FoodMarket.dto.*;
-import com.example.FoodMarket.model.OrderStatus;
 import com.example.FoodMarket.service.OrderStatusService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,41 +25,68 @@ public class OrderStatusController {
         return orderStatusService.getAllOrderStatusesAsDefaultDto();
     }
 
-    @PostMapping("/add")
-    public OrderStatus createOrderStatus(@RequestBody OrderStatusCreateDto orderStatusCreateDto) {
-        return orderStatusService.addOrderStatusFromDto(orderStatusCreateDto);
+    @PostMapping
+    public ResponseEntity<ApiResponse<OrderStatusDefaultDto>> createOrderStatus(
+            @RequestBody OrderStatusCreateDto orderStatusCreateDto) {
+        ApiResponse<OrderStatusDefaultDto> apiResponse = orderStatusService.addOrderStatusFromDto(orderStatusCreateDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse);
     }
 
-    @PutMapping("/changeName/{id}")
-    public ResponseEntity<OrderStatusNameDto> updateName(
+    @PutMapping("/{id}")
+    public ResponseEntity<ApiResponse<OrderStatusDefaultDto>> updateName(
             @PathVariable Long id,
-            @RequestBody OrderStatusNameDto orderStatusNameDto) {
+            @RequestBody OrderStatusDefaultDto dto) {
 
-        orderStatusNameDto.setId(id);  // ensure path ID and DTO ID are in sync
-        OrderStatus updatedOrderStatus = orderStatusService.changeOrderStatusName(orderStatusNameDto);
+        ApiResponse<OrderStatusDefaultDto> apiResponse = orderStatusService.updateOrderStatus(id, dto);
 
-        // Map entity to DTO (you can use a mapper method/service here)
-        OrderStatusNameDto responseDto = new OrderStatusNameDto();
-
-        responseDto.setName(updatedOrderStatus.getName());
-
-        return ResponseEntity.ok(responseDto);
+        if (apiResponse.isSuccess()) {
+            return ResponseEntity.ok(apiResponse);
+        }
+        else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(apiResponse);
+        }
     }
 
     @PostMapping("/addOrder")
-    public ResponseEntity<String> addOrderToOrderStatus(@RequestBody OrderStatusOrderListDto dto) {
-        String result = orderStatusService.addOrderToOrderStatus(dto);
+    public ResponseEntity<String> addOrderToOrderStatus(
+            @PathVariable Long id,
+            @RequestBody OrderStatusAddRemoveOrderDto dto) {
+        ApiResponse<OrderStatusDefaultDto> apiResponse = orderStatusService.addOrderToOrderStatus(id, dto);
 
-        if (result.startsWith("Product added")) {
-            return ResponseEntity.ok(result);
-        } else {
-            return ResponseEntity.badRequest().body(result);
+        if (apiResponse.isSuccess()) {
+            return ResponseEntity.ok(apiResponse.getMessage());
+        }
+        else {
+            return ResponseEntity.badRequest().body(apiResponse.getMessage());
+        }
+    }
+
+    @DeleteMapping("/removeOrder")
+    public ResponseEntity<String> removeOrderFromOrderStatus(
+            @PathVariable Long id,
+            @RequestBody OrderStatusAddRemoveOrderDto dto) {
+
+        ApiResponse<OrderStatusDefaultDto> apiResponse = orderStatusService.removeOrderFromOrderStatus(id, dto);
+
+        if (apiResponse.isSuccess()) {
+            return ResponseEntity.ok(apiResponse.getMessage());
+        }
+        else {
+            return ResponseEntity.badRequest().body(apiResponse.getMessage());
         }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteOrderStatus(@PathVariable Long id) {
-        orderStatusService.deleteOrderStatusById(id);
-        return ResponseEntity.ok("Order status with ID " + id + " deleted successfully.");
+    public ResponseEntity<?> deleteOrderStatus(@PathVariable Long id) {
+        ApiResponse<Void> apiResponse = orderStatusService.deleteOrderStatusById(id);
+
+        if (apiResponse.isSuccess()) {
+            return ResponseEntity.noContent().build(); // 204
+        }
+        else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(apiResponse);
+        }
     }
 }

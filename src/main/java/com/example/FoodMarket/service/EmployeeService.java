@@ -21,33 +21,6 @@ public class EmployeeService {
         this.sellerRepository = sellerRepository;
     }
 
-    /*
-
-    public EmployeeDefaultDto convertToDefaultDto(Employee employee) {
-        return new EmployeeDefaultDto(
-                employee.getId(),
-                employee.getUser(),
-                employee.getSeller()
-        );
-    }
-
-    public Employee addEmployeeFromDto(EmployeeCreateDto employeeCreateDto) {
-        Employee employee = new Employee(
-                employeeCreateDto.getUser(),
-                employeeCreateDto.getSeller()
-        );
-        return employeeRepository.save(employee);
-    }
-
-    public List<EmployeeDefaultDto> getAllEmployeesAsDefaultDto() {
-        return ((List<Employee>)employeeRepository.findAll())
-                .stream()
-                .map(this::convertToDefaultDto)
-                .collect(Collectors.toList());
-    }
-
-     */
-
     public ApiResponse<Void> addUserToSeller(SellerUsersDto dto) {
         Optional<User> userOpt = userRepository.findById(dto.getUserId());
         Optional<Seller> sellerOpt = sellerRepository.findById(dto.getSellerId());

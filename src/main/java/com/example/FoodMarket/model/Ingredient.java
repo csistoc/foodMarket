@@ -24,6 +24,10 @@ public class Ingredient {
         this.products = products;
     }
 
+    public Ingredient(String name) {
+        this.name = name;
+    }
+
     public Long getId() {
         return id;
     }

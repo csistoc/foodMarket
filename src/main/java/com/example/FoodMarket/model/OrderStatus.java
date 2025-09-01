@@ -24,6 +24,10 @@ public class OrderStatus {
         this.orders = orders;
     }
 
+    public OrderStatus(String name) {
+        this.name = name;
+    }
+
     public Long getId() {
         return id;
     }

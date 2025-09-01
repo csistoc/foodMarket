@@ -18,10 +18,11 @@ import java.util.stream.Collectors;
 @Service
 public class UserService {
 
-    private final UserMapper userMapper;
     private final OrderRepository orderRepository;
     private final SellerRepository sellerRepository;
     private final UserRepository userRepository;
+
+    private final UserMapper userMapper;
 
     public UserService(UserMapper userMapper,
                        OrderRepository orderRepository,

@@ -2,16 +2,16 @@ package com.example.FoodMarket.dto;
 
 import java.util.Set;
 
-public class OrderStatusOrderListDto {
+public class OrderStatusAddRemoveOrderDto {
 
     private Long id;
 
     private Set<Long> orderIds;
 
-    public OrderStatusOrderListDto() {
+    public OrderStatusAddRemoveOrderDto() {
     }
 
-    public OrderStatusOrderListDto(Long id, Set<Long> orderIds) {
+    public OrderStatusAddRemoveOrderDto(Long id, Set<Long> orderIds) {
         this.id = id;
         this.orderIds = orderIds;
     }
