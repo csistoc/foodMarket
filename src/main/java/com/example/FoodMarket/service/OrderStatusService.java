@@ -35,17 +35,11 @@ public class OrderStatusService {
                 .collect(Collectors.toList());
     }
 
-    public ApiResponse<OrderStatusDefaultDto> addOrderStatusFromDto(OrderStatusCreateDto orderStatusCreateDto) {
+    public ApiResponse<OrderStatusDefaultDto> addOrderStatusFromDto(OrderStatusCreateDto dto) {
+        // Fetch related entities
+        Set<Order> orders = new HashSet<>(orderRepository.findAllById(dto.getOrderIds()));
 
-        OrderStatus orderStatus = new OrderStatus();
-
-        orderStatus.setName(orderStatusCreateDto.getName());
-
-        Set<Order> orders = new HashSet<>();
-        for (Long orderId : orderStatusCreateDto.getOrderIds()) {
-            Optional<Order> orderOpt = orderRepository.findById(orderId);
-            orderOpt.ifPresent(orders::add);
-        }
+        OrderStatus orderStatus = orderStatusMapper.convertFromCreatetDto(dto);
         orderStatus.setOrders(orders);
 
         orderStatusRepository.save(orderStatus);

@@ -38,12 +38,22 @@ public class Product {
 
     public Product() { }
 
-    public Product(String name, Set<Category> categories, Set<Ingredient> ingredients, Set<Seller> sellers, Set<Order> orders) {
+    public Product(Long id, String name, Set<Category> categories, Set<Ingredient> ingredients, Set<Seller> sellers, Set<Order> orders) {
+        this.id = id;
         this.name = name;
         this.categories = categories;
         this.ingredients = ingredients;
         this.sellers = sellers;
         this.orders = orders;
+    }
+
+    public Product(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
+    public Product(String name) {
+        this.name = name;
     }
 
     public Long getId() {

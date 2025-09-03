@@ -61,7 +61,8 @@ public class UserService {
                 .orElse(null);
     }
 
-    public ApiResponse<UserDefaultDto> updateUser(Long id, UserDefaultDto userDto) {
+    public ApiResponse<UserDefaultDto> updateUser(Long id, UserDefaultDto dto) {
+        // Find user by ID
         Optional<User> optionalUser = userRepository.findById(id);
 
         if (optionalUser.isEmpty()) {
@@ -70,29 +71,38 @@ public class UserService {
 
         User user = optionalUser.get();
 
-        if (userDto.getPassword() != null)
-            user.setPassword(userDto.getPassword());
+        // Update simple fields
+        if (dto.getPassword() != null)
+            user.setPassword(dto.getPassword());
 
-        if (userDto.getUsername() != null)
-            user.setUsername(userDto.getUsername());
+        if (dto.getUsername() != null)
+            user.setUsername(dto.getUsername());
 
-        if (userDto.getEmail() != null)
-            user.setEmail(userDto.getEmail());
+        if (dto.getEmail() != null)
+            user.setEmail(dto.getEmail());
 
-        if (userDto.getPhone() != null)
-            user.setPhone(userDto.getPhone());
+        if (dto.getPhone() != null)
+            user.setPhone(dto.getPhone());
 
-        if (userDto.getAddress() != null)
-            user.setAddress(userDto.getAddress());
+        if (dto.getAddress() != null)
+            user.setAddress(dto.getAddress());
 
-        if (userDto.getFirstName() != null)
-            user.setFirstName(userDto.getFirstName());
+        if (dto.getFirstName() != null)
+            user.setFirstName(dto.getFirstName());
 
-        if (userDto.getLastName() != null)
-            user.setLastName(userDto.getLastName());
+        if (dto.getLastName() != null)
+            user.setLastName(dto.getLastName());
 
-        if (userDto.getDateOfBirth() != null)
-            user.setDateOfBirth(userDto.getDateOfBirth());
+        if (dto.getDateOfBirth() != null)
+            user.setDateOfBirth(dto.getDateOfBirth());
+
+        // Update sellers if provided
+        if (dto.getSellerIds() != null && !dto.getSellerIds().isEmpty()) {
+            Iterable<Seller> foundSellers = sellerRepository.findAllById(dto.getSellerIds());
+            Set<Seller> sellers = new HashSet<>();
+            foundSellers.forEach(sellers::add);
+            user.setSellers(sellers);
+        }
 
         userRepository.save(user);
 

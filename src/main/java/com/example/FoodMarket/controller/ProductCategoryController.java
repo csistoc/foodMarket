@@ -1,5 +1,6 @@
 package com.example.FoodMarket.controller;
 
+import com.example.FoodMarket.api.ApiResponse;
 import com.example.FoodMarket.dto.ProductCategoryDto;
 import com.example.FoodMarket.service.ProductCategoryService;
 import org.springframework.http.ResponseEntity;
@@ -16,25 +17,27 @@ public class ProductCategoryController {
         this.productCategoryService = productCategoryService;
     }
 
-    @PostMapping("/add")
+    @PostMapping("/products")
     public ResponseEntity<String> addProductToCategory(@RequestBody ProductCategoryDto dto) {
-        String result = productCategoryService.addProductToCategory(dto);
+        ApiResponse<Void> apiResponse = productCategoryService.addProductToCategory(dto);
 
-        if (result.startsWith("Product added")) {
-            return ResponseEntity.ok(result);
-        } else {
-            return ResponseEntity.badRequest().body(result);
+        if (apiResponse.isSuccess()) {
+            return ResponseEntity.ok(apiResponse.getMessage());
+        }
+        else {
+            return ResponseEntity.badRequest().body(apiResponse.getMessage());
         }
     }
 
-    @DeleteMapping("/remove")
+    @DeleteMapping("/products")
     public ResponseEntity<String> removeProductFromCategory(@RequestBody ProductCategoryDto dto) {
-        String result = productCategoryService.removeProductFromCategory(dto);
+        ApiResponse<Void> apiResponse = productCategoryService.removeProductFromCategory(dto);
 
-        if (result.startsWith("Product removed")) {
-            return ResponseEntity.ok(result);
-        } else {
-            return ResponseEntity.badRequest().body(result);
+        if (apiResponse.isSuccess()) {
+            return ResponseEntity.ok(apiResponse.getMessage());
+        }
+        else {
+            return ResponseEntity.badRequest().body(apiResponse.getMessage());
         }
     }
 }

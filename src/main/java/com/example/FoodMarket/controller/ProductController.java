@@ -1,10 +1,10 @@
 package com.example.FoodMarket.controller;
 
+import com.example.FoodMarket.api.ApiResponse;
 import com.example.FoodMarket.dto.ProductCreateDto;
 import com.example.FoodMarket.dto.ProductDefaultDto;
-import com.example.FoodMarket.dto.ProductNameDto;
-import com.example.FoodMarket.model.Product;
 import com.example.FoodMarket.service.ProductService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,30 +26,39 @@ public class ProductController {
         return productService.getAllProductsAsDefaultDto();
     }
 
-    @PostMapping("/add")
-    public Product createProduct(@RequestBody ProductCreateDto productCreateDto) {
-        return productService.addProductFromDto(productCreateDto);
+    @PostMapping
+    public ResponseEntity<ApiResponse<ProductDefaultDto>> createProduct(@RequestBody ProductCreateDto dto) {
+        ApiResponse<ProductDefaultDto> apiResponse = productService.addProductFromDto(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse);
     }
 
-    @PutMapping("/changeName/{id}")
-    public ResponseEntity<ProductNameDto> updateName(
+    @PutMapping("/{id}")
+    public ResponseEntity<ApiResponse<ProductDefaultDto>> updateProduct(
             @PathVariable Long id,
-            @RequestBody ProductNameDto productNameDto) {
+            @RequestBody ProductDefaultDto dto) {
 
-        productNameDto.setId(id);  // ensure path ID and DTO ID are in sync
-        Product updatedProduct = productService.changeProductName(productNameDto);
+        dto.setId(id);  // ensure path ID and DTO ID are in sync
+        ApiResponse<ProductDefaultDto> apiResponse = productService.updateProduct(id, dto);
 
-        // Map entity to DTO (you can use a mapper method/service here)
-        ProductNameDto responseDto = new ProductNameDto();
-
-        responseDto.setName(updatedProduct.getName());
-
-        return ResponseEntity.ok(responseDto);
+        if (apiResponse.isSuccess()) {
+            return ResponseEntity.ok(apiResponse);
+        }
+        else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(apiResponse);
+        }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteProduct(@PathVariable Long id) {
-        productService.deleteProductById(id);
-        return ResponseEntity.ok("Product with ID " + id + " deleted successfully.");
+    public ResponseEntity<?> deleteProduct(@PathVariable Long id) {
+        ApiResponse<Void> apiResponse = productService.deleteProductById(id);
+
+        if (apiResponse.isSuccess()) {
+            return ResponseEntity.noContent().build(); // 204
+        }
+        else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(apiResponse);
+        }
     }
 }

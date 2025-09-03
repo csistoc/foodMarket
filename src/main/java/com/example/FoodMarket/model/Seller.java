@@ -18,9 +18,6 @@ public class Seller {
 
     private String phone;
 
-    @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Employee> employees;
-
     @ManyToMany(cascade = { CascadeType.ALL })
     @JoinTable(
             name = "seller_products",
@@ -39,13 +36,18 @@ public class Seller {
 
     public Seller() { }
 
-    public Seller(String name, String address, String phone, Set<Employee> employees, Set<Product> products, Set<User> users) {
+    public Seller(String name, String address, String phone, Set<Product> products, Set<User> users) {
         this.name = name;
         this.address = address;
         this.phone = phone;
-        this.employees = employees;
         this.products = products;
         this.users = users;
+    }
+
+    public Seller(String name, String address, String phone) {
+        this.name = name;
+        this.address = address;
+        this.phone = phone;
     }
 
     public Long getId() {
@@ -78,14 +80,6 @@ public class Seller {
 
     public void setPhone(String phone) {
         this.phone = phone;
-    }
-
-    public Set<Employee> getEmployees() {
-        return employees;
-    }
-
-    public void setEmployees(Set<Employee> employees) {
-        this.employees = employees;
     }
 
     public Set<Product> getProducts() {

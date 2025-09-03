@@ -1,5 +1,6 @@
 package com.example.FoodMarket.mapper;
 
+import com.example.FoodMarket.dto.IngredientCreateDto;
 import com.example.FoodMarket.dto.IngredientDefaultDto;
 import com.example.FoodMarket.model.Ingredient;
 import com.example.FoodMarket.model.Product;
@@ -34,5 +35,12 @@ public class IngredientMapper {
     // Convert DTO → Entity without productIds
     public Ingredient convertFromDefaultDto(IngredientDefaultDto dto) {
         return new Ingredient(dto.getName());
+    }
+
+    // Convert DTO → Entity without productIds
+    public Ingredient convertFromCreateDto(IngredientCreateDto dto) {
+        return new Ingredient(
+                dto.getName()
+        );
     }
 }

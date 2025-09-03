@@ -5,6 +5,7 @@ import com.example.FoodMarket.dto.IngredientCreateDto;
 import com.example.FoodMarket.dto.IngredientDefaultDto;
 import com.example.FoodMarket.mapper.IngredientMapper;
 import com.example.FoodMarket.model.Ingredient;
+import com.example.FoodMarket.model.Order;
 import com.example.FoodMarket.model.Product;
 import com.example.FoodMarket.repository.IngredientRepository;
 import com.example.FoodMarket.repository.ProductRepository;
@@ -37,18 +38,11 @@ public class IngredientService {
                 .collect(Collectors.toList());
     }
 
-    public ApiResponse<IngredientDefaultDto> addIngredientFromDto(IngredientCreateDto ingredientCreateDto) {
+    public ApiResponse<IngredientDefaultDto> addIngredientFromDto(IngredientCreateDto dto) {
+        // Fetch related entities
+        Set<Product> products = new HashSet<>(productRepository.findAllById(dto.getProductIds()));
 
-        Ingredient ingredient = new Ingredient();
-
-        ingredient.setName(ingredientCreateDto.getName());
-
-        Set<Product> products = new HashSet<>();
-        for (Long productId : ingredientCreateDto.getProductIds()) {
-            Optional<Product> productOpt = productRepository.findById(productId);
-            productOpt.ifPresent(products::add);
-        }
-
+        Ingredient ingredient = ingredientMapper.convertFromCreateDto(dto);
         ingredient.setProducts(products);
 
         ingredientRepository.save(ingredient);

@@ -1,5 +1,6 @@
 package com.example.FoodMarket.mapper;
 
+import com.example.FoodMarket.dto.OrderStatusCreateDto;
 import com.example.FoodMarket.dto.OrderStatusDefaultDto;
 import com.example.FoodMarket.model.Order;
 import com.example.FoodMarket.model.OrderStatus;
@@ -33,6 +34,11 @@ public class OrderStatusMapper {
 
     // Convert DTO → Entity without productIds
     public OrderStatus convertFromDefaultDto(OrderStatusDefaultDto dto) {
+        return new OrderStatus(dto.getName());
+    }
+
+    // Convert DTO → Entity without productIds
+    public OrderStatus convertFromCreatetDto(OrderStatusCreateDto dto) {
         return new OrderStatus(dto.getName());
     }
 

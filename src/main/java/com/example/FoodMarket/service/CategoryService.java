@@ -38,17 +38,10 @@ public class CategoryService {
     }
 
     public ApiResponse<CategoryDefaultDto> addCategoryFromDto(CategoryCreateDto dto) {
+        // Fetch related entities
+        Set<Product> products = new HashSet<>(productRepository.findAllById(dto.getProductIds()));
 
-        Category category = new Category();
-
-        category.setName(dto.getName());
-
-        Set<Product> products = new HashSet<>();
-        for (Long productId : dto.getProductIds()) {
-            Optional<Product> productOpt = productRepository.findById(productId);
-            productOpt.ifPresent(products::add);
-        }
-
+        Category category = categoryMapper.convertFromCreatetDto(dto);
         category.setProducts(products);
 
         categoryRepository.save(category);

@@ -1,5 +1,6 @@
 package com.example.FoodMarket.mapper;
 
+import com.example.FoodMarket.dto.CategoryCreateDto;
 import com.example.FoodMarket.dto.CategoryDefaultDto;
 import com.example.FoodMarket.model.*;
 
@@ -32,6 +33,11 @@ public class CategoryMapper {
 
     // Convert DTO → Entity without productIds
     public Category convertFromDefaultDto(CategoryDefaultDto dto) {
+        return new Category(dto.getName());
+    }
+
+    // Convert DTO → Entity without productIds
+    public Category convertFromCreatetDto(CategoryCreateDto dto) {
         return new Category(dto.getName());
     }
 

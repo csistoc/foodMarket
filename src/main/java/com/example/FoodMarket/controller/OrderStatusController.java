@@ -52,6 +52,7 @@ public class OrderStatusController {
     public ResponseEntity<String> addOrderToOrderStatus(
             @PathVariable Long id,
             @RequestBody OrderStatusAddRemoveOrderDto dto) {
+
         ApiResponse<OrderStatusDefaultDto> apiResponse = orderStatusService.addOrderToOrderStatus(id, dto);
 
         if (apiResponse.isSuccess()) {

@@ -1,5 +1,6 @@
 package com.example.FoodMarket.service;
 
+import com.example.FoodMarket.api.ApiResponse;
 import com.example.FoodMarket.dto.ProductCategoryDto;
 import com.example.FoodMarket.model.Category;
 import com.example.FoodMarket.model.Product;
@@ -21,12 +22,12 @@ public class ProductCategoryService {
         this.categoryRepository = categoryRepository;
     }
 
-    public String addProductToCategory(ProductCategoryDto dto) {
+    public ApiResponse<Void> addProductToCategory(ProductCategoryDto dto) {
         Optional<Product> productOpt = productRepository.findById(dto.getProductId());
         Optional<Category> categoryOpt = categoryRepository.findById(dto.getCategoryId());
 
         if (productOpt.isEmpty() || categoryOpt.isEmpty()) {
-            return "Product or Category not found.";
+            return new ApiResponse<>(false, "Product or Category not found.");
         }
 
         Product product = productOpt.get();
@@ -34,7 +35,7 @@ public class ProductCategoryService {
 
         // Check if already related
         if (category.getProducts().contains(product)) {
-            return "This product is already in the category.";
+            return new ApiResponse<>(false, "This product is already in the category.");
         }
 
         // Add relationship
@@ -42,15 +43,15 @@ public class ProductCategoryService {
         product.getCategories().add(category);
 
         categoryRepository.save(category); // Cascade saves join table entry
-        return "Product added to category successfully.";
+        return new ApiResponse<>(true, "Product added to category successfully.");
     }
 
-    public String removeProductFromCategory(ProductCategoryDto dto) {
+    public ApiResponse<Void> removeProductFromCategory(ProductCategoryDto dto) {
         Optional<Product> productOpt = productRepository.findById(dto.getProductId());
         Optional<Category> categoryOpt = categoryRepository.findById(dto.getCategoryId());
 
         if (productOpt.isEmpty() || categoryOpt.isEmpty()) {
-            return "Product or Category not found.";
+            return new ApiResponse<>(false, "Product or Category not found.");
         }
 
         Product product = productOpt.get();
@@ -58,7 +59,7 @@ public class ProductCategoryService {
 
         // Check if the product is in this category
         if (!category.getProducts().contains(product)) {
-            return "This product is not in the category.";
+            return new ApiResponse<>(false, "This product is not in the category.");
         }
 
         // Remove relationship on both sides
@@ -66,6 +67,6 @@ public class ProductCategoryService {
         product.getCategories().remove(category);
 
         categoryRepository.save(category); // Cascade removes join table entry
-        return "Product removed from category successfully.";
+        return new ApiResponse<>(true, "Product removed from category successfully.");
     }
 }

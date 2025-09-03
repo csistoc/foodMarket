@@ -1,5 +1,6 @@
 package com.example.FoodMarket.controller;
 
+import com.example.FoodMarket.api.ApiResponse;
 import com.example.FoodMarket.dto.ProductIngredientDto;
 import com.example.FoodMarket.service.ProductIngredientService;
 import org.springframework.http.ResponseEntity;
@@ -16,22 +17,27 @@ public class ProductIngredientController {
         this.productIngredientService = productIngredientService;
     }
 
-    @PostMapping("/add")
+    @PostMapping("/ingredients")
     public ResponseEntity<String> addIngredientToProduct(@RequestBody ProductIngredientDto dto) {
-        String result = productIngredientService.addIngredientToProduct(dto);
-        return result.startsWith("Ingredient added")
-                ? ResponseEntity.ok(result)
-                : ResponseEntity.badRequest().body(result);
+        ApiResponse<Void> apiResponse = productIngredientService.addIngredientToProduct(dto);
+
+        if (apiResponse.isSuccess()) {
+            return ResponseEntity.ok(apiResponse.getMessage());
+        }
+        else {
+            return ResponseEntity.badRequest().body(apiResponse.getMessage());
+        }
     }
 
-    @DeleteMapping("/remove")
+    @DeleteMapping("/ingredients")
     public ResponseEntity<String> removeIngredientFromProduct(@RequestBody ProductIngredientDto dto) {
-        String result = productIngredientService.removeIngredientFromProduct(dto);
+        ApiResponse<Void> apiResponse = productIngredientService.removeIngredientFromProduct(dto);
 
-        if (result.startsWith("Ingredient removed")) {
-            return ResponseEntity.ok(result);
-        } else {
-            return ResponseEntity.badRequest().body(result);
+        if (apiResponse.isSuccess()) {
+            return ResponseEntity.ok(apiResponse.getMessage());
+        }
+        else {
+            return ResponseEntity.badRequest().body(apiResponse.getMessage());
         }
     }
 }

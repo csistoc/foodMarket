@@ -1,8 +1,9 @@
 package com.example.FoodMarket.service;
 
+import com.example.FoodMarket.api.ApiResponse;
 import com.example.FoodMarket.dto.ProductCreateDto;
 import com.example.FoodMarket.dto.ProductDefaultDto;
-import com.example.FoodMarket.dto.ProductNameDto;
+import com.example.FoodMarket.mapper.ProductMapper;
 import com.example.FoodMarket.model.*;
 import com.example.FoodMarket.repository.*;
 import org.springframework.stereotype.Service;
@@ -17,117 +18,104 @@ import java.util.stream.Collectors;
 public class ProductService {
 
     private final ProductRepository productRepository;
-
     private final CategoryRepository categoryRepository;
-
     private final IngredientRepository ingredientRepository;
-
     private final SellerRepository sellerRepository;
-
     private final OrderRepository orderRepository;
+    private final ProductMapper productMapper;
 
-    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository, IngredientRepository ingredientRepository, SellerRepository sellerRepository, OrderRepository orderRepository) {
+    public ProductService(ProductRepository productRepository, CategoryRepository categoryRepository, IngredientRepository ingredientRepository, SellerRepository sellerRepository, OrderRepository orderRepository, ProductMapper productMapper) {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
         this.ingredientRepository = ingredientRepository;
         this.sellerRepository = sellerRepository;
         this.orderRepository = orderRepository;
-    }
-
-    public ProductDefaultDto convertToDefaultDto(Product product) {
-
-        ProductDefaultDto productDefaultDto = new ProductDefaultDto();
-
-        productDefaultDto.setId(product.getId());
-        productDefaultDto.setName(product.getName());
-
-        Set<Long> categoryIds = new HashSet<>();
-        for(Category i : product.getCategories())
-            categoryIds.add(i.getId());
-        productDefaultDto.setCategoryIds(categoryIds);
-
-        Set<Long> ingredientIds = new HashSet<>();
-        for(Ingredient i : product.getIngredients())
-            ingredientIds.add(i.getId());
-        productDefaultDto.setIngredientIds(ingredientIds);
-
-        Set<Long> sellerIds = new HashSet<>();
-        for(Seller i : product.getSellers())
-            sellerIds.add(i.getId());
-        productDefaultDto.setSellerIds(sellerIds);
-
-        Set<Long> orderIds = new HashSet<>();
-        for(Order i : product.getOrders())
-            orderIds.add(i.getId());
-        productDefaultDto.setOrderIds(orderIds);
-
-        return productDefaultDto;
+        this.productMapper = productMapper;
     }
 
     public List<ProductDefaultDto> getAllProductsAsDefaultDto() {
-        return ((List<Product>)productRepository.findAll())
+        return productRepository.findAll()
                 .stream()
-                .map(this::convertToDefaultDto)
+                .map(productMapper::convertToDefaultDto)
                 .collect(Collectors.toList());
     }
 
-    public Product addProductFromDto(ProductCreateDto productCreateDto) {
+    public ApiResponse<ProductDefaultDto> addProductFromDto(ProductCreateDto dto) {
+        Set<Order> orders = new HashSet<>(orderRepository.findAllById(dto.getOrderIds()));
+        Set<Category> categories = new HashSet<>(categoryRepository.findAllById(dto.getCategoryIds()));
+        Set<Ingredient> ingredients = new HashSet<>(ingredientRepository.findAllById(dto.getIngredientIds()));
+        Set<Seller> sellers = new HashSet<>(sellerRepository.findAllById(dto.getSellerIds()));
 
-        Product product = new Product();
+        Product product = productMapper.convertFromCreateDto(dto);
 
-        product.setName(productCreateDto.getName());
-
-        Set<Category> categories = new HashSet<>();
-        for (Long categoryId : productCreateDto.getCategoryIds()) {
-            Optional<Category> categoryOpt = categoryRepository.findById(categoryId);
-            categoryOpt.ifPresent(categories::add);
-        }
         product.setCategories(categories);
-
-        Set<Ingredient> ingredients = new HashSet<>();
-        for (Long ingredientId : productCreateDto.getIngredientIds()) {
-            Optional<Ingredient> ingredientOpt = ingredientRepository.findById(ingredientId);
-            ingredientOpt.ifPresent(ingredients::add);
-        }
         product.setIngredients(ingredients);
-
-        Set<Seller> sellers = new HashSet<>();
-        for (Long sellerId : productCreateDto.getSellerIds()) {
-            Optional<Seller> sellerOpt = sellerRepository.findById(sellerId);
-            sellerOpt.ifPresent(sellers::add);
-        }
         product.setSellers(sellers);
-
-        Set<Order> orders = new HashSet<>();
-        for (Long orderId : productCreateDto.getOrderIds()) {
-            Optional<Order> orderOpt = orderRepository.findById(orderId);
-            orderOpt.ifPresent(orders::add);
-        }
         product.setOrders(orders);
 
-        return productRepository.save(product);
+        productRepository.save(product);
+
+        return new ApiResponse<>(true, "Product added successfully.", productMapper.convertToDefaultDto(product));
     }
 
-    public Product changeProductName(ProductNameDto productNameDto) {
+    public ApiResponse<ProductDefaultDto> updateProduct(Long id, ProductDefaultDto dto) {
         // Fetch existing
-        Optional<Product> optionalProduct = productRepository.findById(productNameDto.getId());
+        Optional<Product> optionalProduct = productRepository.findById(id);
+
         if (optionalProduct.isEmpty()) {
-            throw new RuntimeException("User not found with ID: " + productNameDto.getId());
+            return new ApiResponse<>(false, "Product not found with ID: " + id);
         }
 
         Product product = optionalProduct.get();
 
-        // Update fields
-        product.setName(productNameDto.getName());
+        // Update simple fields
+        if (dto.getName() != null)
+            product.setName(dto.getName());
 
-        return productRepository.save(product);
+        // Update categories if provided
+        if (dto.getCategoryIds() != null && !dto.getCategoryIds().isEmpty()) {
+            Iterable<Category> foundCategories = categoryRepository.findAllById(dto.getCategoryIds());
+            Set<Category> categories = new HashSet<>();
+            foundCategories.forEach(categories::add);
+            product.setCategories(categories);
+        }
+
+        // Update ingredients if provided
+        if (dto.getIngredientIds() != null && !dto.getIngredientIds().isEmpty()) {
+            Iterable<Ingredient> foundIngredients = ingredientRepository.findAllById(dto.getIngredientIds());
+            Set<Ingredient> ingredients = new HashSet<>();
+            foundIngredients.forEach(ingredients::add);
+            product.setIngredients(ingredients);
+        }
+
+        // Update sellers if provided
+        if (dto.getSellerIds() != null && !dto.getSellerIds().isEmpty()) {
+            Iterable<Seller> foundSellers = sellerRepository.findAllById(dto.getSellerIds());
+            Set<Seller> sellers = new HashSet<>();
+            foundSellers.forEach(sellers::add);
+            product.setSellers(sellers);
+        }
+
+        // Update orders if provided
+        if (dto.getOrderIds() != null && !dto.getOrderIds().isEmpty()) {
+            Iterable<Order> foundOrders = orderRepository.findAllById(dto.getOrderIds());
+            Set<Order> orders = new HashSet<>();
+            foundOrders.forEach(orders::add);
+            product.setOrders(orders);
+        }
+
+        productRepository.save(product);
+
+        return new ApiResponse<>(true, "Product updated successfully.", productMapper.convertToDefaultDto(product));
     }
 
-    public void deleteProductById(Long id) {
+    public ApiResponse<Void> deleteProductById(Long id) {
         if (!productRepository.existsById(id)) {
-            throw new RuntimeException("User not found with ID: " + id);
+            return new ApiResponse<>(false, "Product not found with ID: " + id);
         }
 
         productRepository.deleteById(id);
+
+        return new ApiResponse<>(true, "Product deleted successfully.");
     }
 }
