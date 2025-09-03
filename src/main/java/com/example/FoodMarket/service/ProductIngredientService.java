@@ -71,6 +71,6 @@ public class ProductIngredientService {
         productRepository.save(product);
         ingredientRepository.save(ingredient);
 
-        return return new ApiResponse<>(true, "Ingredient removed from product successfully.");
+        return new ApiResponse<>(true, "Ingredient removed from product successfully.");
     }
 }
