@@ -4,11 +4,13 @@ import com.example.FoodMarket.dto.OrderStatusCreateDto;
 import com.example.FoodMarket.dto.OrderStatusDefaultDto;
 import com.example.FoodMarket.model.Order;
 import com.example.FoodMarket.model.OrderStatus;
+import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Component
 public class OrderStatusMapper {
 
     // Convert Entity → DTO, including related IDs

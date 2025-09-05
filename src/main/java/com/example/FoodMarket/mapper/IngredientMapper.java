@@ -4,11 +4,13 @@ import com.example.FoodMarket.dto.IngredientCreateDto;
 import com.example.FoodMarket.dto.IngredientDefaultDto;
 import com.example.FoodMarket.model.Ingredient;
 import com.example.FoodMarket.model.Product;
+import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Component
 public class IngredientMapper {
 
     // Convert Entity → DTO, including related IDs

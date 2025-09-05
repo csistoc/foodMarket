@@ -27,13 +27,13 @@ public class OrderStatusController {
 
     @PostMapping
     public ResponseEntity<ApiResponse<OrderStatusDefaultDto>> createOrderStatus(
-            @RequestBody OrderStatusCreateDto orderStatusCreateDto) {
-        ApiResponse<OrderStatusDefaultDto> apiResponse = orderStatusService.addOrderStatusFromDto(orderStatusCreateDto);
+            @RequestBody OrderStatusCreateDto dto) {
+        ApiResponse<OrderStatusDefaultDto> apiResponse = orderStatusService.addOrderStatusFromDto(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(apiResponse);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<OrderStatusDefaultDto>> updateName(
+    public ResponseEntity<ApiResponse<OrderStatusDefaultDto>> updateOrderStatus(
             @PathVariable Long id,
             @RequestBody OrderStatusDefaultDto dto) {
 

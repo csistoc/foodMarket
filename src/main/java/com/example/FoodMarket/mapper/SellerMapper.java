@@ -5,11 +5,13 @@ import com.example.FoodMarket.dto.SellerDefaultDto;
 import com.example.FoodMarket.model.Product;
 import com.example.FoodMarket.model.Seller;
 import com.example.FoodMarket.model.User;
+import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Component
 public class SellerMapper {
 
     // Convert Entity → DTO, including related IDs

@@ -3,10 +3,12 @@ package com.example.FoodMarket.mapper;
 import com.example.FoodMarket.dto.ProductCreateDto;
 import com.example.FoodMarket.dto.ProductDefaultDto;
 import com.example.FoodMarket.model.*;
+import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
 import java.util.Set;
 
+@Component
 public class ProductMapper {
 
     // Convert Entity → DTO, including related IDs

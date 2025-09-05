@@ -5,7 +5,6 @@ import com.example.FoodMarket.dto.IngredientCreateDto;
 import com.example.FoodMarket.dto.IngredientDefaultDto;
 import com.example.FoodMarket.mapper.IngredientMapper;
 import com.example.FoodMarket.model.Ingredient;
-import com.example.FoodMarket.model.Order;
 import com.example.FoodMarket.model.Product;
 import com.example.FoodMarket.repository.IngredientRepository;
 import com.example.FoodMarket.repository.ProductRepository;
