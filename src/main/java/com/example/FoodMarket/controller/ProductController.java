@@ -3,6 +3,8 @@ package com.example.FoodMarket.controller;
 import com.example.FoodMarket.api.ApiResponse;
 import com.example.FoodMarket.dto.ProductCreateDto;
 import com.example.FoodMarket.dto.ProductDefaultDto;
+import com.example.FoodMarket.dto.ProductIngredientDto;
+import com.example.FoodMarket.service.ProductIngredientService;
 import com.example.FoodMarket.service.ProductService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,9 +18,11 @@ import java.util.List;
 public class ProductController {
 
     private final ProductService productService;
+    private final ProductIngredientService productIngredientService;
 
-    public ProductController(ProductService productService) {
+    public ProductController(ProductService productService, ProductIngredientService productIngredientService) {
         this.productService = productService;
+        this.productIngredientService = productIngredientService;
     }
 
     @GetMapping
@@ -59,6 +63,30 @@ public class ProductController {
         else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(apiResponse);
+        }
+    }
+
+    @PostMapping("/ingredients")
+    public ResponseEntity<String> addIngredientToProduct(@RequestBody ProductIngredientDto dto) {
+        ApiResponse<Void> apiResponse = productIngredientService.addIngredientToProduct(dto);
+
+        if (apiResponse.isSuccess()) {
+            return ResponseEntity.ok(apiResponse.getMessage());
+        }
+        else {
+            return ResponseEntity.badRequest().body(apiResponse.getMessage());
+        }
+    }
+
+    @DeleteMapping("/ingredients")
+    public ResponseEntity<String> removeIngredientFromProduct(@RequestBody ProductIngredientDto dto) {
+        ApiResponse<Void> apiResponse = productIngredientService.removeIngredientFromProduct(dto);
+
+        if (apiResponse.isSuccess()) {
+            return ResponseEntity.ok(apiResponse.getMessage());
+        }
+        else {
+            return ResponseEntity.badRequest().body(apiResponse.getMessage());
         }
     }
 }

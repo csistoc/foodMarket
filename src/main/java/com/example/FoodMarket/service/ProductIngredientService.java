@@ -14,7 +14,6 @@ import java.util.Optional;
 public class ProductIngredientService {
 
     private final ProductRepository productRepository;
-
     private final IngredientRepository ingredientRepository;
 
     public ProductIngredientService(ProductRepository productRepository, IngredientRepository ingredientRepository) {

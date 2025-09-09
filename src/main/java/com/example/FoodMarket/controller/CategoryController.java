@@ -3,7 +3,9 @@ package com.example.FoodMarket.controller;
 import com.example.FoodMarket.api.ApiResponse;
 import com.example.FoodMarket.dto.CategoryCreateDto;
 import com.example.FoodMarket.dto.CategoryDefaultDto;
+import com.example.FoodMarket.dto.ProductCategoryDto;
 import com.example.FoodMarket.service.CategoryService;
+import com.example.FoodMarket.service.ProductCategoryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,9 +18,11 @@ import java.util.List;
 public class CategoryController {
 
     private final CategoryService categoryService;
+    private final ProductCategoryService productCategoryService;
 
-    public CategoryController(CategoryService categoryService) {
+    public CategoryController(CategoryService categoryService, ProductCategoryService productCategoryService) {
         this.categoryService = categoryService;
+        this.productCategoryService = productCategoryService;
     }
 
     @GetMapping
@@ -58,6 +62,30 @@ public class CategoryController {
         else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(apiResponse);
+        }
+    }
+
+    @PostMapping("/products")
+    public ResponseEntity<String> addProductToCategory(@RequestBody ProductCategoryDto dto) {
+        ApiResponse<Void> apiResponse = productCategoryService.addProductToCategory(dto);
+
+        if (apiResponse.isSuccess()) {
+            return ResponseEntity.ok(apiResponse.getMessage());
+        }
+        else {
+            return ResponseEntity.badRequest().body(apiResponse.getMessage());
+        }
+    }
+
+    @DeleteMapping("/products")
+    public ResponseEntity<String> removeProductFromCategory(@RequestBody ProductCategoryDto dto) {
+        ApiResponse<Void> apiResponse = productCategoryService.removeProductFromCategory(dto);
+
+        if (apiResponse.isSuccess()) {
+            return ResponseEntity.ok(apiResponse.getMessage());
+        }
+        else {
+            return ResponseEntity.badRequest().body(apiResponse.getMessage());
         }
     }
 }

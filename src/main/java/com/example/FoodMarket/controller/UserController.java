@@ -78,7 +78,7 @@ public class UserController {
 
     @DeleteMapping("/sellers")
     public ResponseEntity<String> removeUserFromSeller(@RequestBody SellerUsersDto dto) {
-        ApiResponse<Void> apiResponse = employeeService.addUserToSeller(dto);
+        ApiResponse<Void> apiResponse = employeeService.removeUserFromSeller(dto);
 
         if (apiResponse.isSuccess()) {
             return ResponseEntity.ok(apiResponse.getMessage());
